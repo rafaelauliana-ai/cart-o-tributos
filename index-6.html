@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cidade dos Tributos — Banco dos cartões</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EDF1E4; --card:#F8FAF3; --ink:#1C3328; --ink2:#4A5E52; --line:#C4CFB8; --center:#DCE5CF;
+  --red:#C23A2B; --green:#2F8A4C; --blue:#2A5BA8; --amber:#B8900F;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#131D17; --card:#1B2820; --ink:#E4ECDD; --ink2:#A7B6A5; --line:#34463A; --center:#1F2E24;
+    --red:#EF6A5A; --green:#5CC07A; --blue:#6E9BE6; --amber:#E3BE45;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#131D17; --card:#1B2820; --ink:#E4ECDD; --ink2:#A7B6A5; --line:#34463A; --center:#1F2E24;
+  --red:#EF6A5A; --green:#5CC07A; --blue:#6E9BE6; --amber:#E3BE45;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:"Archivo",system-ui,-apple-system,"Segoe UI",sans-serif;font-size:16px;line-height:1.45}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.wrap{max-width:1080px;margin:0 auto;padding:16px}
+[hidden]{display:none!important}
+
+header.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px;border-bottom:3px double var(--ink);padding-bottom:12px;margin-bottom:16px}
+h1{font-stretch:125%;font-weight:800;font-size:clamp(1.6rem,5vw,2.4rem);line-height:1;margin:0}
+.sub{margin:.35rem 0 0;color:var(--ink2)}
+.place{display:grid;gap:2px;font-size:.85rem;color:var(--ink2)}
+.place select{border:2px solid var(--ink);border-radius:999px;padding:.4rem .9rem;background:var(--card);font-weight:700;color:var(--ink)}
+
+.grid{display:grid;gap:16px;grid-template-columns:minmax(0,1fr) minmax(0,1.35fr);align-items:start}
+@media (max-width:840px){.grid{grid-template-columns:1fr}}
+.panel{background:var(--card);border:1.5px solid var(--line);border-radius:14px;padding:16px}
+.stack{display:grid;gap:12px}
+h2{margin:0;font-stretch:110%;font-size:1.15rem}
+.field{display:grid;gap:4px;font-size:.88rem;color:var(--ink2)}
+.inp{border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--paper);width:100%;font-size:1rem;color:var(--ink)}
+select.inp{font-weight:700}
+.hint{font-size:.85rem;color:var(--ink2);margin:0}
+.flash{min-height:1.4em;font-weight:700;margin:0}
+.flash.err{color:var(--red)} .flash.ok{color:var(--green)}
+.flash button{margin-left:6px;border:1.5px solid currentColor;background:transparent;color:inherit;border-radius:8px;padding:2px 8px;font-weight:700}
+
+.btn{border:2px solid var(--ink);background:var(--ink);color:var(--paper);border-radius:12px;padding:.7rem 1rem;font-weight:800;font-stretch:108%}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn.sm{padding:.4rem .8rem;font-size:.9rem;border-radius:10px}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn.add{background:var(--blue);border-color:var(--blue);color:#fff}
+.btn.charge{background:var(--red);border-color:var(--red);color:#fff}
+.btn.credit{background:var(--green);border-color:var(--green);color:#fff}
+.btn.transfer{background:var(--amber);border-color:var(--amber);color:#1C1A10}
+
+/* lista de cartões */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px}
+.mini{border:2px solid transparent;border-radius:12px;padding:10px 12px;text-align:left;color:#fff;background:linear-gradient(135deg,var(--cc),color-mix(in srgb,var(--cc) 62%,#000));display:grid;gap:1px}
+.mini .c{font-family:"Courier Prime","Courier New",monospace;font-weight:700;letter-spacing:.08em}
+.mini .n{font-size:.8rem;opacity:.9;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mini .s{font-weight:800;font-variant-numeric:tabular-nums;font-size:1.05rem}
+.mini.sel{border-color:var(--ink);box-shadow:0 0 0 2px var(--paper) inset}
+.total{display:flex;justify-content:space-between;font-size:.9rem;color:var(--ink2);border-top:1px solid var(--line);padding-top:8px}
+.total b{color:var(--ink);font-variant-numeric:tabular-nums}
+
+/* cartão selecionado */
+.face{border-radius:18px;padding:18px 20px;color:#fff;background:linear-gradient(135deg,var(--cc) 0%,color-mix(in srgb,var(--cc) 58%,#000) 100%);display:grid;gap:4px;box-shadow:0 6px 0 color-mix(in srgb,var(--cc) 45%,#000);position:relative;overflow:hidden}
+.face::after{content:"";position:absolute;right:-40px;top:-40px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,.08)}
+.face .lbl{font-size:.8rem;opacity:.85}
+.face .code{font-family:"Courier Prime","Courier New",monospace;font-size:1.6rem;font-weight:700;letter-spacing:.14em}
+.face .who{font-weight:700;min-height:1.2em}
+.face .saldo{font-size:clamp(2.2rem,8vw,3rem);font-weight:800;font-stretch:115%;line-height:1.05;font-variant-numeric:tabular-nums;padding-left:2px}
+.face .saldo.bump{animation:bump .4s ease}
+@keyframes bump{40%{transform:scale(1.07)}}
+@media (prefers-reduced-motion:reduce){.face .saldo.bump{animation:none}}
+.empty{display:grid;place-items:center;text-align:center;min-height:240px;color:var(--ink2);border:2px dashed var(--line);border-radius:14px;padding:20px}
+
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips button{border:1.5px solid var(--ink);background:var(--card);border-radius:999px;padding:.35rem .85rem;font-weight:700}
+.ops{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+@media (max-width:520px){.ops{grid-template-columns:1fr 1fr}}
+.ops .btn{padding:.8rem .3rem;font-size:.95rem}
+.shortcuts{display:grid;gap:10px}
+.sgroup{display:grid;gap:6px}
+.sgroup .t{font-size:.8rem;font-weight:700;color:var(--ink2);text-transform:uppercase;letter-spacing:.04em}
+.sbtns{display:flex;flex-wrap:wrap;gap:6px}
+.sbtns button{border:1.5px solid var(--sc);color:var(--sc);background:transparent;border-radius:10px;padding:.4rem .7rem;font-weight:700;font-size:.9rem}
+.sbtns button span{font-variant-numeric:tabular-nums;opacity:.85;margin-left:4px}
+
+.hist{list-style:none;margin:0;padding:0;max-height:340px;overflow:auto;border-top:1px solid var(--line)}
+.hist li{display:grid;grid-template-columns:auto 1fr auto;gap:2px 10px;padding:8px 2px;border-bottom:1px solid var(--line);font-size:.88rem}
+.hist .when{color:var(--ink2);font-variant-numeric:tabular-nums}
+.hist .v{font-weight:800;font-variant-numeric:tabular-nums;text-align:right}
+.hist .v.pos{color:var(--green)} .hist .v.neg{color:var(--red)}
+.hist .meta{grid-column:2/4;color:var(--ink2);font-size:.8rem;display:flex;justify-content:space-between;gap:8px}
+
+details.panel summary{cursor:pointer;font-weight:800;font-stretch:108%}
+details.panel[open] summary{margin-bottom:10px}
+.cfg{display:grid;gap:16px;margin-top:16px}
+.rowx{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.rowx .inp{flex:1;min-width:120px;width:auto}
+.lst{display:grid}
+.lst .it{display:flex;align-items:center;justify-content:space-between;gap:10px;border-bottom:1px solid var(--line);padding:7px 0;font-size:.95rem}
+.lst .it button{border:1.5px solid var(--line);background:transparent;border-radius:8px;padding:.25rem .7rem}
+.dot{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:8px;vertical-align:-1px}
+.tag{font-size:.75rem;font-weight:700;border-radius:999px;padding:1px 8px;color:#fff}
+
+/* botão escanear */
+.hright{display:flex;align-items:flex-end;gap:10px;flex-wrap:wrap}
+.btn.scanbtn{display:inline-flex;align-items:center;gap:8px;font-size:1.05rem;padding:.65rem 1.1rem}
+.btn.scanbtn svg{width:22px;height:22px}
+
+/* scanner */
+.scan{position:fixed;inset:0;background:#0b120e;color:#fff;z-index:20;display:none;flex-direction:column}
+.scan.open{display:flex}
+.scan .stop{padding:calc(env(safe-area-inset-top,0px) + 12px) 16px 10px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.scan .stop b{font-stretch:115%;font-size:1.1rem}
+.scan .x{background:rgba(255,255,255,.12);border:0;color:#fff;border-radius:999px;padding:.45rem 1rem;font-weight:700}
+.scan .vid{position:relative;flex:1;min-height:0;display:grid;place-items:center;overflow:hidden;background:#000}
+.scan video{width:100%;height:100%;object-fit:cover}
+.scan .frame{position:absolute;width:min(68vw,300px);aspect-ratio:1;border:3px solid rgba(255,255,255,.9);border-radius:18px;box-shadow:0 0 0 9999px rgba(0,0,0,.38);transition:border-color .2s}
+.scan .frame.hit{border-color:#5CC07A}
+.scan .camerr{position:absolute;inset:auto 16px;text-align:center;font-weight:700;line-height:1.4;background:rgba(0,0,0,.6);padding:12px;border-radius:12px}
+.scan .sbottom{padding:14px 16px calc(env(safe-area-inset-bottom,0px) + 16px);display:grid;gap:10px;max-height:52%;overflow:auto}
+.scan .step{font-size:1.3rem;font-weight:800;font-stretch:110%;line-height:1.2}
+.scan .pill{display:flex;justify-content:space-between;align-items:center;gap:8px;border-radius:12px;padding:10px 12px;background:var(--pc);font-weight:700}
+.scan .pill button{background:rgba(0,0,0,.28);border:0;color:#fff;border-radius:8px;padding:4px 10px;font-weight:700}
+.scan .result{border-radius:14px;padding:14px;background:var(--rc);display:grid;gap:2px}
+.scan .result .big{font-size:1.6rem;font-weight:800;font-stretch:110%;font-variant-numeric:tabular-nums}
+.scan .result .acts{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+.scan .result button{background:rgba(0,0,0,.28);border:1.5px solid rgba(255,255,255,.6);color:#fff;border-radius:10px;padding:.4rem .9rem;font-weight:700}
+.scan .smsg{min-height:1.3em;margin:0;font-weight:700;color:#FFB4A8}
+
+/* folha de QR */
+.qgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-top:10px}
+.qi{border:1.5px dashed var(--line);border-radius:10px;padding:10px;text-align:center;display:grid;gap:2px;background:#fff;color:#111}
+.qi svg{width:100%;height:auto;display:block}
+.qi b{font-size:1rem}
+.qi span{font-size:.8rem;color:#444}
+.qi i{display:block;height:6px;border-radius:3px;background:var(--qc,transparent);margin-bottom:4px}
+@media print{
+  body *{visibility:hidden}
+  #printSheet,#printSheet *{visibility:visible}
+  #printSheet{position:absolute;left:0;top:0;width:100%}
+  .qgrid{grid-template-columns:repeat(3,1fr);gap:6mm}
+  .qi{break-inside:avoid;border-color:#999}
+}
+
+/* modal */
+.veil{position:fixed;inset:0;background:rgba(10,20,14,.55);display:none;align-items:center;justify-content:center;padding:16px;z-index:10}
+.veil.open{display:flex}
+.modal{width:min(420px,100%);background:var(--card);border:2.5px solid var(--ink);border-radius:16px;padding:18px;display:grid;gap:12px;max-height:calc(100% - 20px);overflow:auto}
+.modal h3{margin:0;font-stretch:112%;font-size:1.3rem}
+.modal p{margin:0}
+.modal .acts{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div>
+      <h1>Cidade dos Tributos</h1>
+      <p class="sub">Banco dos cartões: adicionar saldo, cobrar, creditar e transferir.</p>
+    </div>
+    <div class="hright">
+      <label class="place">Operando como
+        <select id="placeSel"></select>
+      </label>
+      <button class="btn scanbtn" id="openScan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3"/><path d="M7 12h10"/></svg>Escanear QR</button>
+    </div>
+  </header>
+
+  <div class="grid">
+    <div class="stack">
+      <div class="panel stack">
+        <label class="field">Selecione o cartão
+          <select id="cardSel" class="inp"></select>
+        </label>
+        <label class="field">ou digite o código
+          <input id="cardCode" class="inp" placeholder="Ex.: CRT456" autocomplete="off" autocapitalize="characters" spellcheck="false">
+        </label>
+        <p class="flash err" id="codeMsg"></p>
+      </div>
+      <div class="panel stack">
+        <h2>Todos os cartões</h2>
+        <div class="cards" id="allCards"></div>
+        <div class="total"><span>Total em todos os cartões</span><b id="totalAll"></b></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="empty" id="noCard">
+        <div>
+          <p style="font-size:1.1rem;font-weight:700;margin:0 0 4px">Nenhum cartão selecionado</p>
+          <p class="hint">Escolha um cartão na lista ou digite o código.</p>
+        </div>
+      </div>
+
+      <div class="panel stack" id="cardView" hidden>
+        <div class="face" id="face">
+          <span class="lbl">Cartão do Contribuinte</span>
+          <span class="code" id="vCode"></span>
+          <span class="who" id="vWho"></span>
+          <span class="lbl">Saldo</span>
+          <span class="saldo" id="vSaldo"></span>
+        </div>
+
+        <label class="field">Com quem está o cartão
+          <input id="vName" class="inp" placeholder="Nome do visitante" maxlength="24">
+        </label>
+
+        <label class="field">Valor (T$)
+          <input type="number" id="amt" class="inp" min="1" step="1" inputmode="numeric" placeholder="0">
+        </label>
+        <div class="chips" id="chips"></div>
+        <label class="field">Descrição (opcional)
+          <input id="desc" class="inp" placeholder="Ex.: casa IPTU, brinde do stand" maxlength="40">
+        </label>
+        <div class="ops">
+          <button class="btn add" id="bAdd">Adicionar saldo</button>
+          <button class="btn charge" id="bCharge">Cobrar</button>
+          <button class="btn credit" id="bCredit">Creditar</button>
+          <button class="btn transfer" id="bTransfer">Transferir</button>
+        </div>
+        <p class="flash" id="msg" aria-live="polite"></p>
+        <div><button class="btn ghost sm" id="bUndo" hidden></button></div>
+
+        <div class="shortcuts" id="shortcuts"></div>
+
+        <h2 style="margin-top:4px">Extrato</h2>
+        <ul class="hist" id="hist"></ul>
+        <button class="btn ghost" id="bReturn">Devolver cartão (zerar para o próximo visitante)</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="cfg">
+    <details class="panel">
+      <summary>Cadastrar e remover cartões</summary>
+      <p class="hint" style="margin-bottom:8px">Use os mesmos códigos impressos nos cartões físicos.</p>
+      <div class="lst" id="cardList"></div>
+      <div class="rowx" style="margin-top:10px">
+        <input id="newCode" class="inp" placeholder="Novo código, ex.: CRT460" maxlength="12" autocomplete="off" autocapitalize="characters" spellcheck="false">
+        <button class="btn sm" id="addCode">Cadastrar</button>
+      </div>
+      <p class="flash" id="cardListMsg"></p>
+    </details>
+
+    <details class="panel">
+      <summary>Atalhos do jogo</summary>
+      <p class="hint" style="margin-bottom:8px">Botões de um toque para as casas e cartas do tabuleiro de vocês. Tocar num atalho cobra ou credita na hora (e dá para desfazer).</p>
+      <div class="lst" id="scList"></div>
+      <div class="rowx" style="margin-top:10px">
+        <input id="scName" class="inp" placeholder="Nome, ex.: IPTU" maxlength="28">
+        <input id="scVal" class="inp" type="number" min="1" placeholder="Valor" style="max-width:110px">
+        <select id="scType" class="inp" style="max-width:140px"><option value="c">Cobrar</option><option value="r">Creditar</option></select>
+        <button class="btn sm" id="addSc">Adicionar</button>
+      </div>
+      <p class="flash" id="scMsg"></p>
+    </details>
+
+    <details class="panel">
+      <summary>QR codes para imprimir</summary>
+      <p class="hint" style="margin-bottom:8px">Gere a folha, imprima e recorte. Cole o QR de cada cartão no cartão físico e o QR de cada tributo na casa ou carta do tabuleiro. Se mudar o valor de um atalho, imprima o QR dele de novo.</p>
+      <div class="rowx">
+        <label class="check"><input type="checkbox" id="qCards" checked> Cartões</label>
+        <label class="check"><input type="checkbox" id="qSc" checked> Atalhos do jogo</label>
+        <label class="check"><input type="checkbox" id="qInit" checked> Saldo inicial</label>
+      </div>
+      <div class="rowx" style="margin-top:10px">
+        <button class="btn sm" id="bSheet">Gerar folha</button>
+        <button class="btn ghost sm" id="bPrint" hidden>Imprimir</button>
+      </div>
+      <p class="flash" id="qMsg"></p>
+      <div id="printSheet"><div class="qgrid" id="qGrid"></div></div>
+    </details>
+
+    <details class="panel">
+      <summary>Locais, saldo inicial e backup</summary>
+      <div class="stack">
+        <label class="field">Saldo inicial padrão (aparece como atalho de valor)
+          <input id="initVal" class="inp" type="number" min="1" style="max-width:200px">
+        </label>
+        <div>
+          <p class="field" style="margin:0 0 4px">Locais que operam o sistema</p>
+          <div class="lst" id="placeList"></div>
+          <div class="rowx" style="margin-top:8px">
+            <input id="newPlace" class="inp" placeholder="Ex.: Stand 4" maxlength="24">
+            <button class="btn sm" id="addPlace">Adicionar</button>
+          </div>
+        </div>
+        <div class="rowx">
+          <button class="btn ghost sm" id="bExport">Baixar backup</button>
+          <label class="btn ghost sm" style="display:inline-block">Restaurar backup<input type="file" id="fImport" accept="application/json,.json" hidden></label>
+          <button class="btn ghost sm" id="bWipe" style="border-color:var(--red);color:var(--red)">Apagar tudo</button>
+        </div>
+        <p class="flash" id="cfgMsg"></p>
+        <p class="hint">Os saldos ficam salvos neste navegador, neste aparelho. Use o backup para levar os dados para outro aparelho.</p>
+      </div>
+    </details>
+  </div>
+</div>
+
+<div class="scan" id="scan" role="dialog" aria-modal="true" aria-label="Escanear QR code">
+  <div class="stop"><b>Escanear QR</b><button class="x" id="closeScan">Fechar</button></div>
+  <div class="vid">
+    <video id="video" playsinline muted autoplay></video>
+    <div class="frame" id="frame"></div>
+    <p class="camerr" id="camErr" hidden></p>
+  </div>
+  <div class="sbottom">
+    <div class="step" id="step"></div>
+    <div id="pending"></div>
+    <p class="smsg" id="sMsg"></p>
+    <div id="sResult"></div>
+  </div>
+</div>
+<canvas id="qrCanvas" hidden></canvas>
+
+<div class="veil" id="veil" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+  <div class="modal" id="modal"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
+<script>
+/* ===================== DADOS ===================== */
+const KEY = 'cidadeTributos:cartoes';
+const PALETTE = ['#D9412E','#2F6FD6','#C99712','#8E4BB8','#1E8C6E','#D2691E','#C2407A','#3E5A73'];
+const DEFAULT_SC = [
+  ['IPTU',80,'c'],['ICMS',60,'c'],['Taxa de lixo',30,'c'],['IPVA',90,'c'],['Pedágio',20,'c'],['ISS',40,'c'],
+  ['Imposto de Renda',90,'c'],['Contribuição de melhoria',60,'c'],['IOF',30,'c'],['INSS',70,'c'],
+  ['Imposto Seletivo',50,'c'],['IBS e CBS',60,'c'],['Multa da Malha Fina',30,'c'],
+  ['Nota Premiada',50,'r'],['Restituição do IR',80,'r'],['13º salário',85,'r'],['Pergunta certa',30,'r']
+].map(([n,v,t])=>({n,v,t}));
+function defaults(){
+  return {
+    cards:['CRT456','CRT457','CRT458','CRT459'].map(code=>({code,name:'',saldo:0,hist:[]})),
+    shortcuts: DEFAULT_SC.map(x=>({...x})),
+    places:['Recepção','Jogo','Stand 1','Stand 2','Stand 3'],
+    place:'Jogo', initial:1000
+  };
+}
+function load(){
+  try{
+    const v = localStorage.getItem(KEY);
+    if(v){
+      const d = JSON.parse(v), base = defaults();
+      if(d && Array.isArray(d.cards)){
+        return {
+          cards: d.cards.map(c=>({code:String(c.code), name:c.name||'', saldo:Math.max(0,+c.saldo||0), hist:Array.isArray(c.hist)?c.hist:[]})),
+          shortcuts: Array.isArray(d.shortcuts) ? d.shortcuts : base.shortcuts,
+          places: Array.isArray(d.places) && d.places.length ? d.places : base.places,
+          place: d.place || base.place, initial: +d.initial || base.initial
+        };
+      }
+    }
+  }catch(e){}
+  return defaults();
+}
+let D = load();
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(D)); }catch(e){ flash('Não foi possível salvar neste navegador.','err'); } }
+
+let sel = '';
+const undoStack = [];
+const $ = s => document.querySelector(s);
+const fmt = n => 'T$ ' + Math.round(n).toLocaleString('pt-BR');
+const esc = s => String(s).replace(/[&<>"]/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
+const norm = x => String(x||'').trim().toUpperCase().replace(/\s+/g,'');
+const find = code => D.cards.find(c=>c.code===norm(code));
+const colorOf = code => PALETTE[Math.max(0,D.cards.findIndex(c=>c.code===norm(code))) % PALETTE.length];
+const when = ts => new Date(ts).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+
+function tx(code, delta, desc){
+  const c = find(code); if(!c || !delta) return;
+  c.saldo = Math.max(0, Math.round(c.saldo + delta));
+  c.hist.unshift({ts:Date.now(), v:Math.round(delta), d:desc||'', p:D.place, s:c.saldo});
+  if(c.hist.length>400) c.hist.length = 400;
+}
+
+/* ===================== RENDER ===================== */
+function render(){
+  // local
+  $('#placeSel').innerHTML = D.places.map(p=>`<option ${p===D.place?'selected':''}>${esc(p)}</option>`).join('');
+  // seletor
+  $('#cardSel').innerHTML = '<option value="">— selecione o cartão —</option>' + D.cards.map(c=>
+    `<option value="${esc(c.code)}" ${c.code===sel?'selected':''}>${esc(c.code)}${c.name?' · '+esc(c.name):''} · ${fmt(c.saldo)}</option>`).join('');
+  // todos
+  $('#allCards').innerHTML = D.cards.map(c=>`
+    <button class="mini ${c.code===sel?'sel':''}" style="--cc:${colorOf(c.code)}" data-code="${esc(c.code)}">
+      <span class="c">${esc(c.code)}</span><span class="n">${c.name?esc(c.name):'livre'}</span><span class="s">${fmt(c.saldo)}</span>
+    </button>`).join('') || '<p class="hint">Nenhum cartão cadastrado.</p>';
+  $('#allCards').querySelectorAll('.mini').forEach(b=>b.onclick=()=>select(b.dataset.code));
+  $('#totalAll').textContent = fmt(D.cards.reduce((a,c)=>a+c.saldo,0));
+  // cartão
+  const c = find(sel);
+  $('#noCard').hidden = !!c; $('#cardView').hidden = !c;
+  if(c){
+    $('#face').style.setProperty('--cc', colorOf(c.code));
+    $('#vCode').textContent = c.code;
+    $('#vWho').textContent = c.name || 'Cartão livre';
+    $('#vSaldo').textContent = fmt(c.saldo);
+    if(document.activeElement !== $('#vName')) $('#vName').value = c.name;
+    $('#hist').innerHTML = c.hist.length ? c.hist.slice(0,80).map(h=>`
+      <li><span class="when">${when(h.ts)}</span><span>${esc(h.d||'—')}</span>
+      <span class="v ${h.v>=0?'pos':'neg'}">${h.v>=0?'+':'−'}${fmt(Math.abs(h.v))}</span>
+      <span class="meta"><span>${esc(h.p||'')}</span><span>saldo ${fmt(h.s)}</span></span></li>`).join('')
+      : '<li><span></span><span class="hint">Nenhuma movimentação ainda.</span><span></span></li>';
+  }
+  // chips de valor
+  const vals = [10,20,50,100,500,D.initial].filter((v,i,a)=>a.indexOf(v)===i);
+  $('#chips').innerHTML = vals.map(v=>`<button data-v="${v}">${v===D.initial?'Inicial ':''}${v.toLocaleString('pt-BR')}</button>`).join('');
+  $('#chips').querySelectorAll('button').forEach(b=>b.onclick=()=>{ $('#amt').value=b.dataset.v; if(+b.dataset.v===D.initial && !$('#desc').value) $('#desc').value='Saldo inicial'; });
+  // atalhos
+  const cs = D.shortcuts.filter(s=>s.t==='c'), rs = D.shortcuts.filter(s=>s.t==='r');
+  $('#shortcuts').innerHTML = !D.shortcuts.length ? '' : `
+    <h2>Atalhos do jogo</h2>
+    ${cs.length?`<div class="sgroup"><span class="t">Cobrar</span><div class="sbtns" style="--sc:var(--red)">${cs.map(s=>`<button data-i="${D.shortcuts.indexOf(s)}">${esc(s.n)}<span>${s.v}</span></button>`).join('')}</div></div>`:''}
+    ${rs.length?`<div class="sgroup"><span class="t">Creditar</span><div class="sbtns" style="--sc:var(--green)">${rs.map(s=>`<button data-i="${D.shortcuts.indexOf(s)}">${esc(s.n)}<span>${s.v}</span></button>`).join('')}</div></div>`:''}`;
+  $('#shortcuts').querySelectorAll('button[data-i]').forEach(b=>b.onclick=()=>runShortcut(D.shortcuts[+b.dataset.i]));
+  // desfazer
+  const u = undoStack[undoStack.length-1];
+  $('#bUndo').hidden = !u;
+  if(u) $('#bUndo').textContent = 'Desfazer: ' + u.label;
+  // configurações
+  $('#cardList').innerHTML = D.cards.map(c=>`<div class="it"><span><span class="dot" style="background:${colorOf(c.code)}"></span><b>${esc(c.code)}</b>${c.name?' · '+esc(c.name):''} · ${fmt(c.saldo)}</span><button data-del="${esc(c.code)}">Remover</button></div>`).join('') || '<p class="hint">Nenhum cartão.</p>';
+  $('#cardList').querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>removeCard(b.dataset.del));
+  $('#scList').innerHTML = D.shortcuts.map((s,i)=>`<div class="it"><span><span class="tag" style="background:${s.t==='c'?'var(--red)':'var(--green)'}">${s.t==='c'?'Cobrar':'Creditar'}</span> ${esc(s.n)} · ${fmt(s.v)}</span><button data-sdel="${i}">Remover</button></div>`).join('') || '<p class="hint">Nenhum atalho.</p>';
+  $('#scList').querySelectorAll('[data-sdel]').forEach(b=>b.onclick=()=>{ D.shortcuts.splice(+b.dataset.sdel,1); save(); render(); });
+  $('#placeList').innerHTML = D.places.map((p,i)=>`<div class="it"><span>${esc(p)}</span>${D.places.length>1?`<button data-pdel="${i}">Remover</button>`:''}</div>`).join('');
+  $('#placeList').querySelectorAll('[data-pdel]').forEach(b=>b.onclick=()=>{ const r=D.places.splice(+b.dataset.pdel,1)[0]; if(D.place===r) D.place=D.places[0]; save(); render(); });
+  if(document.activeElement !== $('#initVal')) $('#initVal').value = D.initial;
+}
+function flash(text, cls, html){ const m=$('#msg'); m.className='flash '+(cls||''); if(html) m.innerHTML=html; else m.textContent=text; }
+function bump(){ const el=$('#vSaldo'); el.classList.remove('bump'); void el.offsetWidth; el.classList.add('bump'); }
+
+/* ===================== SELEÇÃO ===================== */
+function select(code){ sel = code ? norm(code) : ''; $('#codeMsg').textContent=''; flash(''); render();
+  if(sel && matchMedia('(max-width:840px)').matches) $('#cardView').scrollIntoView({behavior:'smooth',block:'start'}); }
+$('#cardSel').addEventListener('change', e=>{ $('#cardCode').value=''; select(e.target.value); });
+$('#cardCode').addEventListener('input', e=>{
+  const v = norm(e.target.value);
+  if(find(v)){ select(v); }
+  else $('#codeMsg').textContent = v.length>=5 ? 'Código não encontrado.' : '';
+});
+$('#vName').addEventListener('change', e=>{ const c=find(sel); if(!c) return; c.name=e.target.value.trim(); save(); render(); });
+$('#placeSel').addEventListener('change', e=>{ D.place=e.target.value; save(); });
+
+/* ===================== OPERAÇÕES ===================== */
+function done(label, items, text){
+  undoStack.push({label, items}); if(undoStack.length>30) undoStack.shift();
+  save(); $('#amt').value=''; $('#desc').value=''; render(); bump(); flash(text,'ok');
+}
+function readAmount(){
+  const v = Math.round(+$('#amt').value);
+  if(!(v>0)){ flash('Digite um valor maior que zero.','err'); $('#amt').focus(); return 0; }
+  return v;
+}
+function charge(c, v, desc){
+  if(v > c.saldo){
+    flash('', 'err', `Saldo insuficiente: o cartão tem ${fmt(c.saldo)}.` + (c.saldo>0?` <button id="partial">Cobrar só ${fmt(c.saldo)}</button>`:''));
+    const pb = $('#partial'); if(pb) pb.onclick=()=>charge(c, c.saldo, desc);
+    return;
+  }
+  tx(c.code, -v, desc);
+  done(`cobrança de ${fmt(v)} em ${c.code}`, [{code:c.code, delta:-v}], `Cobrado ${fmt(v)}${desc?' ('+desc+')':''}. Saldo: ${fmt(c.saldo)}.`);
+}
+function credit(c, v, desc, verb){
+  tx(c.code, v, desc);
+  done(`${verb.toLowerCase()} ${fmt(v)} em ${c.code}`, [{code:c.code, delta:v}], `${verb} ${fmt(v)}${desc?' ('+desc+')':''}. Saldo: ${fmt(c.saldo)}.`);
+}
+$('#bAdd').onclick = ()=>{ const c=find(sel), v=readAmount(); if(c&&v) credit(c, v, $('#desc').value.trim()||'Saldo adicionado', 'Adicionado'); };
+$('#bCredit').onclick = ()=>{ const c=find(sel), v=readAmount(); if(c&&v) credit(c, v, $('#desc').value.trim()||'Crédito', 'Creditado'); };
+$('#bCharge').onclick = ()=>{ const c=find(sel), v=readAmount(); if(c&&v) charge(c, v, $('#desc').value.trim()||'Cobrança'); };
+function runShortcut(s){
+  const c = find(sel); if(!c) return;
+  if(s.t==='c') charge(c, s.v, s.n); else credit(c, s.v, s.n, 'Creditado');
+}
+
+$('#bTransfer').onclick = ()=>{
+  const c = find(sel); if(!c) return;
+  const v = readAmount(); if(!v) return;
+  const others = D.cards.filter(x=>x.code!==c.code);
+  if(!others.length){ flash('Cadastre outro cartão para transferir.','err'); return; }
+  if(v > c.saldo){ flash(`Saldo insuficiente: o cartão tem ${fmt(c.saldo)}.`,'err'); return; }
+  modal(`<h3 id="mTitle">Transferir ${fmt(v)}</h3>
+    <p>De <b>${esc(c.code)}</b>${c.name?' ('+esc(c.name)+')':''} para:</p>
+    <select id="tTo" class="inp">${others.map(o=>`<option value="${esc(o.code)}">${esc(o.code)}${o.name?' · '+esc(o.name):''}</option>`).join('')}</select>
+    <div class="acts"><button class="btn ghost" data-close>Cancelar</button><button class="btn transfer" id="tOk">Transferir</button></div>`);
+  $('#tOk').onclick = ()=>{
+    const to = find($('#tTo').value); const d = $('#desc').value.trim();
+    tx(c.code, -v, `Transferência para ${to.code}${d?' · '+d:''}`);
+    tx(to.code, v, `Transferência de ${c.code}${d?' · '+d:''}`);
+    closeModal();
+    done(`transferência de ${fmt(v)} para ${to.code}`, [{code:c.code,delta:-v},{code:to.code,delta:v}], `Transferido ${fmt(v)} para ${to.code}. Saldo: ${fmt(c.saldo)}.`);
+  };
+};
+
+function undoLast(){
+  const u = undoStack[undoStack.length-1]; if(!u) return {ok:false, msg:'Nada para desfazer.'};
+  for(const it of u.items){
+    const c = find(it.code);
+    if(!c){ undoStack.pop(); render(); return {ok:false, msg:'Um dos cartões foi removido; não dá para desfazer.'}; }
+    if(c.saldo - it.delta < 0) return {ok:false, msg:`Não dá para desfazer: ${c.code} já gastou esse valor.`};
+  }
+  u.items.forEach(it=>tx(it.code, -it.delta, 'Estorno: ' + u.label));
+  undoStack.pop(); save(); render(); bump();
+  return {ok:true, msg:'Desfeito: ' + u.label + '.'};
+}
+$('#bUndo').onclick = ()=>{ const r = undoLast(); flash(r.msg, r.ok?'ok':'err'); };
+
+$('#bReturn').onclick = ()=>{
+  const c = find(sel); if(!c) return;
+  modal(`<h3 id="mTitle">Zerar ${esc(c.code)}?</h3>
+    <p>O saldo de ${fmt(c.saldo)}, o nome e o extrato serão apagados para o cartão ser entregue a outro visitante.</p>
+    <div class="acts"><button class="btn ghost" data-close>Cancelar</button><button class="btn charge" id="rOk">Zerar e devolver</button></div>`);
+  $('#rOk').onclick = ()=>{ c.saldo=0; c.name=''; c.hist=[]; undoStack.length=0; save(); closeModal(); render(); flash(`${c.code} zerado e pronto para o próximo visitante.`,'ok'); };
+};
+
+/* ===================== CONFIGURAÇÕES ===================== */
+function removeCard(code){
+  const c = find(code); if(!c) return;
+  modal(`<h3 id="mTitle">Remover ${esc(code)}?</h3><p>O cartão sai da lista${c.saldo?` e o saldo de ${fmt(c.saldo)} é perdido`:''}.</p>
+    <div class="acts"><button class="btn ghost" data-close>Cancelar</button><button class="btn charge" id="dOk">Remover</button></div>`);
+  $('#dOk').onclick = ()=>{ D.cards = D.cards.filter(x=>x.code!==code); if(sel===code) sel=''; save(); closeModal(); render(); };
+}
+$('#addCode').onclick = ()=>{
+  const code = norm($('#newCode').value), m = $('#cardListMsg');
+  if(!/^[A-Z0-9-]{3,12}$/.test(code)){ m.className='flash err'; m.textContent='Use de 3 a 12 letras ou números.'; return; }
+  if(find(code)){ m.className='flash err'; m.textContent='Esse código já existe.'; return; }
+  D.cards.push({code,name:'',saldo:0,hist:[]}); save();
+  $('#newCode').value=''; m.className='flash ok'; m.textContent=`${code} cadastrado.`; render();
+};
+$('#addSc').onclick = ()=>{
+  const n = $('#scName').value.trim(), v = Math.round(+$('#scVal').value), t = $('#scType').value, m=$('#scMsg');
+  if(!n || !(v>0)){ m.className='flash err'; m.textContent='Preencha o nome e um valor maior que zero.'; return; }
+  D.shortcuts.push({n,v,t}); save(); $('#scName').value=''; $('#scVal').value='';
+  m.className='flash ok'; m.textContent=`Atalho “${n}” adicionado.`; render();
+};
+$('#addPlace').onclick = ()=>{
+  const p = $('#newPlace').value.trim(); if(!p || D.places.includes(p)) return;
+  D.places.push(p); $('#newPlace').value=''; save(); render();
+};
+$('#initVal').addEventListener('change', e=>{ const v=Math.round(+e.target.value); if(v>0){ D.initial=v; save(); render(); } });
+
+$('#bExport').onclick = ()=>{
+  const blob = new Blob([JSON.stringify(D,null,2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'cartoes-backup-' + new Date().toISOString().slice(0,16).replace(/[:T]/g,'-') + '.json';
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href), 2000);
+  $('#cfgMsg').className='flash ok'; $('#cfgMsg').textContent='Backup baixado.';
+};
+$('#fImport').addEventListener('change', e=>{
+  const f = e.target.files[0]; if(!f) return;
+  const r = new FileReader();
+  r.onload = ()=>{
+    try{
+      const d = JSON.parse(r.result);
+      if(!d || !Array.isArray(d.cards)) throw 0;
+      modal(`<h3 id="mTitle">Restaurar backup?</h3><p>Os ${d.cards.length} cartões do arquivo vão substituir os dados atuais deste aparelho.</p>
+        <div class="acts"><button class="btn ghost" data-close>Cancelar</button><button class="btn" id="iOk">Restaurar</button></div>`);
+      $('#iOk').onclick = ()=>{ localStorage.setItem(KEY, JSON.stringify(d)); D = load(); sel=''; undoStack.length=0; save(); closeModal(); render();
+        $('#cfgMsg').className='flash ok'; $('#cfgMsg').textContent='Backup restaurado.'; };
+    }catch(err){ $('#cfgMsg').className='flash err'; $('#cfgMsg').textContent='Arquivo inválido.'; }
+    e.target.value='';
+  };
+  r.readAsText(f);
+});
+$('#bWipe').onclick = ()=>{
+  modal(`<h3 id="mTitle">Apagar tudo?</h3><p>Todos os cartões, saldos, extratos e atalhos voltam ao padrão. Considere baixar um backup antes.</p>
+    <div class="acts"><button class="btn ghost" data-close>Cancelar</button><button class="btn charge" id="wOk">Apagar tudo</button></div>`);
+  $('#wOk').onclick = ()=>{ D = defaults(); sel=''; undoStack.length=0; save(); closeModal(); render(); };
+};
+
+/* ===================== QR CODE ===================== */
+// Formatos: cartão = "CT:CARD:CRT456" (ou só o código) · tributo = "CT:OP:<c|r|a>:<valor>:<nome codificado>"
+const QR_CARD = 'CT:CARD:', QR_OP = 'CT:OP:';
+const opQR = (t,v,n) => `${QR_OP}${t}:${v}:${encodeURIComponent(n)}`;
+function parseQR(text){
+  text = String(text||'').trim();
+  if(text.startsWith(QR_CARD)){
+    const code = norm(text.slice(QR_CARD.length)), c = find(code);
+    return c ? {type:'card', card:c} : {type:'bad', msg:`O cartão ${code} não está cadastrado neste aparelho.`};
+  }
+  if(text.startsWith(QR_OP)){
+    const parts = text.slice(QR_OP.length).split(':');
+    const t = parts[0], v = Math.round(+parts[1]);
+    let n = parts.slice(2).join(':'); try{ n = decodeURIComponent(n); }catch(e){}
+    if(!['c','r','a'].includes(t) || !(v>0)) return {type:'bad', msg:'QR de tributo inválido.'};
+    return {type:'op', op:{t, v, n: n || (t==='c'?'Cobrança':'Crédito')}};
+  }
+  const c = find(text); if(c) return {type:'card', card:c};
+  return {type:'bad', msg:'Este QR code não é do jogo.'};
+}
+const opVerb = op => op.t==='c' ? 'Cobrar' : op.t==='a' ? 'Adicionar' : 'Creditar';
+
+const SC = {stream:null, timer:null, detector:null, pendOp:null, pendCard:null, last:'', lastTs:0, busy:false};
+function sMsg(t){ $('#sMsg').textContent = t||''; }
+function setStep(){
+  const st = $('#step'), pd = $('#pending');
+  if(SC.pendOp){
+    st.textContent = 'Agora escaneie o cartão';
+    pd.innerHTML = `<div class="pill" style="--pc:${SC.pendOp.t==='c'?'#B8382A':'#2F7D47'}"><span>${esc(SC.pendOp.n)} · ${opVerb(SC.pendOp)} ${fmt(SC.pendOp.v)}</span><button id="pX">Cancelar</button></div>`;
+  } else if(SC.pendCard){
+    const c = SC.pendCard;
+    st.textContent = 'Agora escaneie o tributo';
+    pd.innerHTML = `<div class="pill" style="--pc:${colorOf(c.code)}"><span>${esc(c.code)}${c.name?' · '+esc(c.name):''} · ${fmt(c.saldo)}</span><button id="pX">Cancelar</button></div>`;
+  } else {
+    st.textContent = 'Escaneie o QR do tributo ou do cartão';
+    pd.innerHTML = '';
+  }
+  const x = $('#pX'); if(x) x.onclick = ()=>{ SC.pendOp=null; SC.pendCard=null; sMsg(''); setStep(); };
+}
+function beep(ok){
+  try{ navigator.vibrate && navigator.vibrate(ok?60:[60,60,60]); }catch(e){}
+  try{
+    const a = beep.ctx || (beep.ctx = new (window.AudioContext||window.webkitAudioContext)());
+    const o = a.createOscillator(), g = a.createGain();
+    o.frequency.value = ok ? 1200 : 300; g.gain.value = .08;
+    o.connect(g); g.connect(a.destination); o.start(); o.stop(a.currentTime + (ok?.09:.25));
+  }catch(e){}
+}
+function showResult(kind, html){
+  const colors = {c:'#B8382A', r:'#2F7D47', a:'#2A5BA8', err:'#7A2A20'};
+  $('#sResult').innerHTML = `<div class="result" style="--rc:${colors[kind]}">${html}</div>`;
+}
+function execute(card, op, partial){
+  SC.pendOp = null; SC.pendCard = null; setStep();
+  let v = op.v;
+  if(op.t==='c' && v > card.saldo){
+    if(!partial){
+      beep(false);
+      showResult('err', `<span>Saldo insuficiente</span><span class="big">${esc(card.code)} tem ${fmt(card.saldo)}</span><span>${esc(op.n)} custa ${fmt(op.v)}.</span>
+        <div class="acts">${card.saldo>0?`<button id="rPartial">Cobrar só ${fmt(card.saldo)}</button>`:''}</div>`);
+      const b = $('#rPartial'); if(b) b.onclick = ()=>execute(card, op, true);
+      return;
+    }
+    v = card.saldo;
+  }
+  const delta = op.t==='c' ? -v : v;
+  tx(card.code, delta, op.n);
+  const verb = op.t==='c' ? 'Cobrado' : op.t==='a' ? 'Adicionado' : 'Creditado';
+  undoStack.push({label:`${verb.toLowerCase()} ${fmt(v)} em ${card.code}`, items:[{code:card.code, delta}]});
+  if(undoStack.length>30) undoStack.shift();
+  save(); sel = card.code; render();
+  beep(true);
+  showResult(op.t, `<span>${verb} · ${esc(op.n)}</span><span class="big">${op.t==='c'?'−':'+'}${fmt(v)}</span>
+    <span>${esc(card.code)}${card.name?' · '+esc(card.name):''} · saldo ${fmt(card.saldo)}</span>
+    <div class="acts"><button id="rUndo">Desfazer</button></div>`);
+  $('#rUndo').onclick = ()=>{ const r = undoLast(); showResult(r.ok?'a':'err', `<span>${esc(r.msg)}</span><span>${esc(card.code)} · saldo ${fmt(card.saldo)}</span>`); };
+}
+function handleScan(text){
+  const now = Date.now();
+  if(text === SC.last && now - SC.lastTs < 2500) return;
+  SC.last = text; SC.lastTs = now;
+  const f = $('#frame'); f.classList.add('hit'); setTimeout(()=>f.classList.remove('hit'), 400);
+  const r = parseQR(text);
+  sMsg('');
+  if(r.type==='bad'){ beep(false); sMsg(r.msg); return; }
+  $('#sResult').innerHTML = '';
+  if(r.type==='op'){
+    if(SC.pendCard) execute(SC.pendCard, r.op);
+    else { SC.pendOp = r.op; beep(true); setStep(); }
+  } else {
+    if(SC.pendOp) execute(r.card, SC.pendOp);
+    else { SC.pendCard = r.card; beep(true); sel = r.card.code; render(); setStep(); }
+  }
+}
+window.__scan = handleScan; // usado para testes
+
+async function openScanner(){
+  $('#scan').classList.add('open');
+  SC.pendOp = null; SC.pendCard = null; SC.last = ''; $('#sResult').innerHTML=''; sMsg(''); setStep();
+  const err = $('#camErr'); err.hidden = true;
+  const fail = t => { err.textContent = t; err.hidden = false; };
+  if(!window.isSecureContext) return fail('A câmera só funciona com o site aberto pelo endereço https (o link do GitHub Pages).');
+  if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return fail('Este navegador não permite usar a câmera. Tente o Chrome ou o Safari atualizados.');
+  try{
+    SC.stream = await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'}}, audio:false});
+  }catch(e){
+    return fail('Não foi possível abrir a câmera. Toque em “Permitir” quando o navegador pedir, ou libere a câmera para este site nas configurações.');
+  }
+  if(!$('#scan').classList.contains('open')){ stopStream(); return; }
+  const v = $('#video'); v.srcObject = SC.stream;
+  try{ await v.play(); }catch(e){}
+  SC.detector = null;
+  if('BarcodeDetector' in window){
+    try{ const fm = await BarcodeDetector.getSupportedFormats(); if(fm.includes('qr_code')) SC.detector = new BarcodeDetector({formats:['qr_code']}); }catch(e){}
+  }
+  if(!SC.detector && typeof jsQR !== 'function') fail('O leitor de QR não carregou. Confira a internet e abra o site de novo.');
+  scanLoop();
+}
+async function scanLoop(){
+  if(!SC.stream) return;
+  const v = $('#video');
+  if(v.readyState >= 2 && !SC.busy){
+    SC.busy = true;
+    try{
+      let text = null;
+      if(SC.detector){
+        const codes = await SC.detector.detect(v);
+        if(codes && codes[0]) text = codes[0].rawValue;
+      } else if(typeof jsQR === 'function'){
+        const cv = $('#qrCanvas'), scale = Math.min(1, 640 / v.videoWidth);
+        cv.width = Math.round(v.videoWidth*scale); cv.height = Math.round(v.videoHeight*scale);
+        const ctx = cv.getContext('2d', {willReadFrequently:true});
+        ctx.drawImage(v, 0, 0, cv.width, cv.height);
+        const img = ctx.getImageData(0, 0, cv.width, cv.height);
+        const q = jsQR(img.data, img.width, img.height, {inversionAttempts:'dontInvert'});
+        if(q) text = q.data;
+      }
+      if(text) handleScan(text);
+    }catch(e){}
+    SC.busy = false;
+  }
+  SC.timer = setTimeout(scanLoop, 160);
+}
+function stopStream(){
+  clearTimeout(SC.timer);
+  if(SC.stream){ SC.stream.getTracks().forEach(t=>t.stop()); SC.stream = null; }
+  $('#video').srcObject = null;
+}
+function closeScanner(){ stopStream(); $('#scan').classList.remove('open'); }
+$('#openScan').onclick = openScanner;
+$('#closeScan').onclick = closeScanner;
+
+/* folha de impressão */
+$('#bSheet').onclick = ()=>{
+  const m = $('#qMsg');
+  if(typeof qrcode !== 'function'){ m.className='flash err'; m.textContent='O gerador de QR não carregou. Confira a internet e abra o site de novo.'; return; }
+  const items = [];
+  if($('#qCards').checked) D.cards.forEach(c=>items.push({txt:QR_CARD+c.code, title:c.code, sub:'Cartão do Contribuinte', color:colorOf(c.code)}));
+  if($('#qInit').checked) items.push({txt:opQR('a', D.initial, 'Saldo inicial'), title:'Saldo inicial', sub:'Adicionar '+fmt(D.initial), color:'#2A5BA8'});
+  if($('#qSc').checked) D.shortcuts.forEach(s=>items.push({txt:opQR(s.t, s.v, s.n), title:s.n, sub:(s.t==='c'?'Cobrar ':'Creditar ')+fmt(s.v), color:s.t==='c'?'#C23A2B':'#2F8A4C'}));
+  if(!items.length){ m.className='flash err'; m.textContent='Marque pelo menos um tipo.'; return; }
+  $('#qGrid').innerHTML = items.map(it=>{
+    const q = qrcode(0,'M'); q.addData(it.txt); q.make();
+    return `<div class="qi" style="--qc:${it.color}"><i></i>${q.createSvgTag(5,2)}<b>${esc(it.title)}</b><span>${esc(it.sub)}</span></div>`;
+  }).join('');
+  $('#bPrint').hidden = false;
+  m.className='flash ok'; m.textContent=`${items.length} QR codes gerados.`;
+};
+$('#bPrint').onclick = ()=>window.print();
+
+/* ===================== MODAL ===================== */
+function modal(html){
+  $('#modal').innerHTML = html; $('#veil').classList.add('open');
+  $('#modal').querySelectorAll('[data-close]').forEach(b=>b.onclick=closeModal);
+  const f = $('#modal').querySelector('select,button:not([data-close])'); if(f) f.focus();
+}
+function closeModal(){ $('#veil').classList.remove('open'); }
+$('#veil').addEventListener('click', e=>{ if(e.target.id==='veil') closeModal(); });
+document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ closeModal(); if($('#scan').classList.contains('open')) closeScanner(); } });
+
+// mantém outras abas do mesmo navegador sincronizadas
+window.addEventListener('storage', e=>{ if(e.key===KEY){ D = load(); render(); } });
+
+render();
+</script>
+</body>
+</html>
