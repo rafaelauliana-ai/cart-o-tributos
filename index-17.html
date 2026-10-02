@@ -1,0 +1,2549 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#DFF5E7">
+<title>My dear binder</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@500;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  --desk:#DFF5E7; --dot:#C3EBD1; --page:#FBFFFC; --ink:#1D3B2A; --muted:#5E806C;
+  --line:#BDE6CC; --mint:#C9F5DA; --neon:#39F58A; --neon-ink:#0B7D3E; --pocket:#EEFAF2;
+  --on-neon:#06301A; --neon-sh:#1FB863; --pink:#FF9EC7; --pink-ink:#A3255E; --lilac:#CDB8FF; --sun:#FFE066; --danger:#C2362B;
+  --shadow:0 6px 0 -1px rgba(40,120,75,.18),0 14px 26px -16px rgba(10,60,30,.45);
+  --display:"Fredoka","Arial Rounded MT Bold",system-ui,sans-serif;
+  --body:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --desk:#0A1F14; --dot:#123224; --page:#112B1D; --ink:#E4FAEC; --muted:#93BEA4;
+    --line:#245A3C; --mint:#1A4430; --neon:#45FF96; --neon-ink:#45FF96; --pocket:#163826;
+    --pink-ink:#FFB3D1; --danger:#FF8C80; --shadow:0 6px 0 -1px rgba(0,0,0,.35),0 14px 26px -16px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+  --desk:#0A1F14; --dot:#123224; --page:#112B1D; --ink:#E4FAEC; --muted:#93BEA4;
+  --line:#245A3C; --mint:#1A4430; --neon:#45FF96; --neon-ink:#45FF96; --pocket:#163826;
+  --pink-ink:#FFB3D1; --danger:#FF8C80; --shadow:0 6px 0 -1px rgba(0,0,0,.35),0 14px 26px -16px rgba(0,0,0,.7);
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;color:var(--ink);font:16px/1.5 var(--body);min-height:100vh;
+  background:var(--desk) radial-gradient(var(--dot) 1.6px,transparent 1.7px) 0 0/22px 22px}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--neon);outline-offset:2px}
+[hidden]{display:none!important}
+
+/* ---------- comuns ---------- */
+.btn{border-radius:999px;padding:10px 18px;font-weight:800;cursor:pointer;background:var(--page);color:var(--ink);border:2px solid var(--line)}
+.btn.primary{background:var(--neon);color:var(--on-neon);border-color:var(--neon);box-shadow:0 4px 0 var(--neon-sh)}
+.btn.primary:active{transform:translateY(3px);box-shadow:0 1px 0 var(--neon-sh)}
+.btn.pink{background:var(--pink);color:#4A0F28;border-color:var(--pink);box-shadow:0 4px 0 #E2789F}
+.btn.danger{color:var(--danger);border-color:currentColor;background:transparent}
+.btn.small{padding:7px 13px;font-size:.88rem}
+.btn:disabled{opacity:.5;cursor:default}
+.link{background:none;border:0;color:var(--neon-ink);font-weight:800;cursor:pointer;padding:4px 0;text-decoration:underline}
+.field{width:100%;border:2px solid var(--line);background:var(--desk);border-radius:14px;padding:9px 12px}
+label{display:block;font-size:.85rem;font-weight:800;margin:10px 0 4px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.err{color:var(--danger);font-size:.85rem;margin:8px 0 0;min-height:1em}
+.note{font-size:.85rem;color:var(--muted);margin:6px 0 0;text-align:center}
+.card{background:var(--page);border:2px solid var(--line);border-radius:24px;padding:16px;box-shadow:var(--shadow)}
+h2.title{font:700 1.5rem/1.15 var(--display);margin:4px 0 4px}
+p.sub{color:var(--muted);margin:0 0 14px}
+.seg{display:flex;gap:4px;background:var(--page);border:2px solid var(--line);border-radius:999px;padding:4px;margin-bottom:14px}
+.seg button{flex:1;border:0;border-radius:999px;padding:7px 8px;font-weight:800;background:transparent;cursor:pointer;font-size:.9rem}
+.seg button[aria-pressed="true"]{background:var(--neon);color:var(--on-neon)}
+.empty{text-align:center;padding:26px 14px;color:var(--muted)}
+.empty .em{width:86px;margin:0 auto 8px}
+.empty b{display:block;color:var(--ink);font:600 1.1rem var(--display);margin-bottom:4px}
+svg.st{width:100%;height:auto;display:block}
+
+/* ---------- topo e abas ---------- */
+.top{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:10px;
+  padding:10px 16px;background:color-mix(in srgb,var(--desk) 88%,transparent);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.brand{display:flex;align-items:center;gap:8px;font:700 1.25rem var(--display)}
+.brand i{display:block;width:26px;height:32px;border-radius:5px 8px 8px 5px;background:var(--mint);border:2px solid var(--line);position:relative;transform:rotate(-6deg);box-shadow:0 3px 0 var(--neon-sh)}
+.brand i::after{content:"";position:absolute;right:5px;top:0;bottom:0;width:5px;background:var(--neon)}
+.avatar{width:42px;height:42px;border-radius:50%;border:2px solid var(--line);background:var(--mint);padding:6px;cursor:pointer;line-height:0}
+main{max-width:620px;margin:0 auto;padding:6px 14px calc(110px + env(safe-area-inset-bottom,0px))}
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:30;padding:8px 10px calc(8px + env(safe-area-inset-bottom,0px));
+  background:var(--page);border-top:2px solid var(--line);display:flex;justify-content:center}
+.tabs .in{display:grid;grid-template-columns:repeat(5,1fr);gap:2px;width:100%;max-width:560px}
+.tabs button{border:0;background:transparent;border-radius:18px;padding:6px 2px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;font-weight:800;font-size:.75rem;color:var(--muted)}
+.tabs svg{width:24px;height:24px}
+.tabs button[aria-selected="true"]{background:var(--mint);color:var(--ink)}
+.tabs button[aria-selected="true"] svg{color:var(--neon-ink)}
+
+/* ---------- binder ---------- */
+.bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:10px 0}
+.bar .grow{flex:1}
+.search{flex:1 1 180px;min-width:0;border:2px solid var(--line);background:var(--page);border-radius:999px;padding:9px 16px}
+.pills{display:flex;gap:6px;flex-wrap:wrap}
+.pill{background:var(--page);border:2px solid var(--line);border-radius:999px;padding:3px 12px;font-size:.85rem;font-weight:800}
+.pill b{color:var(--neon-ink)}
+.book{position:relative;perspective:1600px;margin-top:8px;--cc:#8BE3AE;--band:#39F58A;--ringbg:linear-gradient(#F4FFF8,#A9C9B6);--sheet:var(--page)}
+.inside{position:relative;background:color-mix(in srgb,var(--cc) 62%,#0B3A22);border-radius:20px 28px 28px 20px;padding:14px 14px 14px 44px;
+  box-shadow:0 10px 0 -2px color-mix(in srgb,var(--cc) 45%,#04170D),0 18px 30px -14px rgba(10,60,30,.5)}
+.rings{position:absolute;left:10px;top:0;bottom:0;display:flex;flex-direction:column;justify-content:space-around;padding:34px 0;z-index:3}
+.rings i{display:block;width:30px;height:14px;border-radius:999px;background:var(--ringbg);box-shadow:0 2px 0 rgba(0,0,0,.25)}
+.sheet{position:relative;background:var(--sheet);border-radius:14px;padding:24px 12px 12px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px;transform-origin:left center}
+.sheet::before{content:"";position:absolute;top:-8px;left:28%;width:44%;height:22px;transform:rotate(-2deg);border-radius:3px;opacity:.92;
+  background:repeating-linear-gradient(45deg,var(--band) 0 8px,rgba(255,255,255,.75) 8px 16px)}
+.sheet.custom{color:#5E806C}
+.sheet.custom .pocket{background:rgba(255,255,255,.55);border-color:rgba(30,80,50,.2)}
+.pagetag{position:absolute;right:-6px;bottom:-10px;background:var(--pink);color:#4A0F28;font:600 .8rem var(--display);padding:3px 10px;border-radius:999px;transform:rotate(6deg);border:2px solid #fff;z-index:2}
+.pocket{position:relative;aspect-ratio:55/85;border-radius:10px;background:var(--pocket);border:2px solid var(--line);padding:0;overflow:visible;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--muted)}
+.pocket::after{content:"";position:absolute;inset:0;border-radius:8px;background:linear-gradient(125deg,rgba(255,255,255,.45) 0%,rgba(255,255,255,0) 35%,rgba(255,255,255,0) 72%,rgba(255,255,255,.18) 100%);pointer-events:none;z-index:2}
+.pc{position:absolute;inset:0;border-radius:8px;overflow:hidden}
+.pc img{width:100%;height:100%;object-fit:cover;display:block}
+.pocket{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
+.pocket .num{position:absolute;top:3px;left:3px;z-index:4;min-width:18px;height:18px;padding:0 5px;border-radius:999px;background:rgba(255,255,255,.92);color:#1D3B2A;font:700 .66rem/18px var(--display);text-align:center;box-shadow:0 1px 2px rgba(0,0,0,.2)}
+.pocket.empty .num{background:transparent;box-shadow:none;color:inherit;opacity:.7}
+.pocket.holding{transform:scale(.94);transition:transform .45s ease}
+.pocket.moved{animation:moved .6s ease}
+@keyframes moved{0%{transform:scale(.85)}60%{transform:scale(1.06)}100%{transform:none}}
+.pocket.empty{border-style:dashed}
+.pocket.empty span:not(.num){font:600 1.5rem var(--display);line-height:1}
+.pocket.dim{opacity:.2}
+.pocket .tag{position:absolute;left:3px;right:3px;bottom:3px;background:rgba(10,40,24,.8);color:#E9FFF1;font-size:.66rem;font-weight:800;line-height:1.25;padding:2px 6px;border-radius:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;z-index:3}
+.pocket .flag{position:absolute;top:-6px;right:-6px;z-index:5;font:700 .62rem var(--display);padding:1px 7px;border-radius:999px;border:2px solid #fff;transform:rotate(8deg)}
+.flag.troca{background:var(--sun);color:#5A4300}
+.flag.venda{background:var(--pink);color:#4A0F28}
+.dbl-l .pc{inset:2px;border-radius:7px;box-shadow:0 0 0 2px rgba(255,255,255,.8),0 0 0 4px rgba(120,170,140,.45)}
+.top-l .pc,.deco-l .pc{inset:3px;border-radius:6px;box-shadow:0 0 0 4px rgba(255,255,255,.75),0 0 0 5px rgba(120,170,140,.5)}
+.top-l::before,.deco-l::before{content:"";position:absolute;top:2px;left:50%;width:30%;height:6px;transform:translateX(-50%);border-radius:0 0 6px 6px;background:rgba(150,200,170,.55);z-index:4}
+.dc{position:absolute;width:22%;z-index:4;pointer-events:none}
+.dc.a{top:-6%;right:-8%;transform:rotate(14deg)}
+.dc.b{bottom:12%;left:-10%;transform:rotate(-12deg)}
+
+.cover{position:absolute;inset:0;z-index:5;border-radius:20px 28px 28px 20px;transform-origin:left center;cursor:pointer;overflow:hidden;
+  background-color:var(--cc);transition:transform .95s cubic-bezier(.55,.05,.25,1),opacity .3s ease .62s;
+  box-shadow:0 10px 0 -2px color-mix(in srgb,var(--cc) 60%,#04170D),0 18px 30px -14px rgba(10,60,30,.5)}
+.book.open .cover{transform:rotateY(-172deg);opacity:0;pointer-events:none}
+.book:not(.open) .cover{transition:transform .95s cubic-bezier(.55,.05,.25,1),opacity .15s ease}
+.p-xadrez{background-image:repeating-linear-gradient(0deg,rgba(255,255,255,.36) 0 14px,transparent 14px 28px),repeating-linear-gradient(90deg,rgba(255,255,255,.36) 0 14px,transparent 14px 28px)}
+.p-bolinhas{background-image:radial-gradient(rgba(255,255,255,.85) 3.5px,transparent 4px);background-size:26px 26px}
+.p-listras{background-image:repeating-linear-gradient(135deg,rgba(255,255,255,.34) 0 10px,transparent 10px 22px)}
+.p-coracoes{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Cpath d='M20 30C11 24 8 19 8 15a5.5 5.5 0 0 1 12-2.5A5.5 5.5 0 0 1 32 15c0 4-3 9-12 15z' fill='white' fill-opacity='.5'/%3E%3C/svg%3E");background-size:40px 40px}
+.p-estrelas{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='44'%3E%3Cpath d='M22 6c2 10 6 14 16 16-10 2-14 6-16 16-2-10-6-14-16-16 10-2 14-6 16-16z' fill='white' fill-opacity='.5'/%3E%3C/svg%3E");background-size:44px 44px}
+.cover .spine{position:absolute;left:0;top:0;bottom:0;width:30px;background:rgba(0,40,20,.18);border-right:2px dashed rgba(255,255,255,.6)}
+.cover .band{position:absolute;right:28px;top:-2px;bottom:-2px;width:16px;background:var(--band);box-shadow:0 0 0 2px rgba(0,0,0,.08),0 0 14px color-mix(in srgb,var(--band) 70%,transparent);z-index:1}
+.cover .label{position:absolute;left:50%;top:20%;transform:translateX(-46%) rotate(-3deg);background:#fff;color:#1D3B2A;border-radius:18px;padding:10px 22px;max-width:72%;text-align:center;
+  font:700 clamp(1.3rem,6vw,2rem)/1.1 var(--display);box-shadow:0 4px 0 rgba(0,40,20,.18);z-index:2;overflow-wrap:anywhere}
+.cover .hint{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);background:#fff;color:#1D3B2A;font:600 .85rem var(--display);padding:4px 14px;border-radius:999px;z-index:2;white-space:nowrap;box-shadow:0 3px 0 rgba(0,40,20,.15)}
+.cover.decorating{cursor:default}
+.cover.decorating .hint{display:none}
+.stk{position:absolute;transform:translate(-50%,-50%);z-index:3;user-select:none;-webkit-user-select:none;touch-action:none;line-height:0}
+.stk svg{filter:drop-shadow(0 2px 1px rgba(0,40,20,.3))}
+.stk.txt{line-height:1.1;background:#fff;color:#1D3B2A;border:3px solid var(--pink);border-radius:999px;padding:4px 12px;font:700 1rem var(--display);white-space:nowrap;box-shadow:0 2px 2px rgba(0,40,20,.3)}
+.cover.decorating .stk{cursor:grab}
+.stk.sel{outline:2px dashed #fff;outline-offset:4px;border-radius:8px}
+
+.panel{margin-top:22px}
+.panel h3{font:600 1.05rem var(--display);margin:0 0 8px}
+.grp{margin-bottom:16px}
+.tray{display:grid;grid-template-columns:repeat(auto-fill,minmax(52px,1fr));gap:8px}
+.tray button{background:var(--pocket);border:2px solid var(--line);border-radius:14px;padding:6px;cursor:pointer;line-height:0}
+.sw{display:flex;gap:8px;flex-wrap:wrap}
+.sw button{width:44px;height:44px;border-radius:14px;border:3px solid var(--line);cursor:pointer;padding:0;background-color:var(--c,#ccc)}
+.sw button[aria-pressed="true"]{border-color:var(--ink);box-shadow:0 0 0 3px var(--neon)}
+.sw.round button{border-radius:50%}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chips button{border:2px solid var(--line);background:var(--page);border-radius:999px;padding:6px 12px;font-weight:800;font-size:.85rem;cursor:pointer}
+.chips button[aria-pressed="true"]{background:var(--neon);border-color:var(--neon);color:var(--on-neon)}
+.inline{display:flex;gap:8px;flex-wrap:wrap}
+.inline input{flex:1;min-width:0}
+
+@media (prefers-reduced-motion:no-preference){
+  .sheet.out-next{animation:outNext .22s ease-in forwards}
+  .sheet.in-next{animation:inNext .26s ease-out}
+  .sheet.out-prev{animation:outPrev .22s ease-in forwards}
+  .sheet.in-prev{animation:inPrev .26s ease-out}
+  @keyframes outNext{to{transform:perspective(1200px) rotateY(-80deg);opacity:.3}}
+  @keyframes inNext{from{transform:perspective(1200px) rotateY(60deg);opacity:.3}}
+  @keyframes outPrev{to{transform:perspective(1200px) rotateY(60deg);opacity:.3}}
+  @keyframes inPrev{from{transform:perspective(1200px) rotateY(-80deg);opacity:.3}}
+  .spark{position:fixed;width:18px;height:18px;pointer-events:none;z-index:80;animation:burst .8s ease-out forwards}
+  @keyframes burst{to{transform:translate(var(--dx),var(--dy)) scale(.2) rotate(160deg);opacity:0}}
+  .view{animation:pop .25s ease-out}
+  @keyframes pop{from{opacity:0;transform:translateY(6px)}}
+}
+@media (prefers-reduced-motion:reduce){.cover,.book:not(.open) .cover{transition:opacity .2s}}
+.pager{display:flex;align-items:center;justify-content:space-between;margin-top:20px;gap:10px}
+.pager b{font:600 1rem var(--display)}
+
+/* ---------- trocas ---------- */
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.tcard{display:flex;flex-direction:column;justify-content:flex-start;background:var(--page);border:2px solid var(--line);border-radius:20px;padding:8px;cursor:pointer;text-align:left;box-shadow:var(--shadow);position:relative}
+.tcard .ph{position:relative;aspect-ratio:55/85;border-radius:12px;overflow:hidden;background:var(--pocket)}
+.tcard .ph img{width:100%;height:100%;object-fit:cover;display:block}
+.tcard .nm{font-weight:900;margin:8px 4px 0;line-height:1.25;overflow-wrap:anywhere}
+.tcard .mm{font-size:.82rem;color:var(--muted);margin:0 4px}
+.tcard .want{font-size:.8rem;margin:6px 4px 2px;background:var(--mint);border-radius:10px;padding:4px 8px}
+.badge{position:absolute;top:14px;left:14px;font:700 .8rem var(--display);padding:2px 10px;border-radius:999px;border:2px solid #fff;z-index:2}
+.badge.troca{background:var(--sun);color:#5A4300}
+.badge.venda{background:var(--pink);color:#4A0F28}
+
+/* ---------- editor de foto ---------- */
+.ed-stage{position:relative;margin:0 auto;background:#111;border-radius:14px;overflow:hidden;touch-action:none;cursor:grab}
+.ed-stage canvas{display:block;width:100%;height:100%}
+.ed-stage .grid{position:absolute;inset:0;pointer-events:none;background:
+  linear-gradient(rgba(255,255,255,.35),rgba(255,255,255,.35)) 33.33% 0/1px 100% no-repeat,
+  linear-gradient(rgba(255,255,255,.35),rgba(255,255,255,.35)) 66.66% 0/1px 100% no-repeat,
+  linear-gradient(rgba(255,255,255,.35),rgba(255,255,255,.35)) 0 33.33%/100% 1px no-repeat,
+  linear-gradient(rgba(255,255,255,.35),rgba(255,255,255,.35)) 0 66.66%/100% 1px no-repeat;box-shadow:inset 0 0 0 3px var(--neon)}
+.ed-stage.round{border-radius:50%}
+.ed-tools{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:12px}
+.ed-zoom{display:flex;align-items:center;gap:10px;margin-top:12px;font-weight:800;font-size:.85rem}
+.ed-zoom input{flex:1;accent-color:var(--neon)}
+.frames{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.frames button{background:var(--pocket);border:2px solid var(--line);border-radius:14px;padding:8px 6px 4px;cursor:pointer;font-size:.72rem;font-weight:800;line-height:1.2}
+.frames svg{width:70%;margin:0 auto 2px;display:block}
+.sug-ok{text-align:center;padding:10px 0}
+.tour-bub .tname{display:inline-block;font:700 .75rem var(--display);background:var(--mint);color:var(--neon-ink);border-radius:999px;padding:1px 10px;margin-bottom:2px}
+
+/* ---------- perfis ---------- */
+.pubhead{text-align:center}
+.pubhead .bigav{margin:0 auto 8px;width:96px;height:96px}
+.pubhead h2{font:700 1.4rem/1.15 var(--display);margin:0}
+.pubhead .uname{color:var(--neon-ink);font-weight:900;margin:2px 0 0}
+.pubhead .bio{margin:10px auto 0;max-width:420px;overflow-wrap:anywhere;white-space:pre-wrap}
+.creator{display:inline-flex;align-items:center;gap:6px;margin:8px auto 0;padding:4px 12px 4px 8px;border-radius:999px;font:700 .8rem var(--display);
+  background:linear-gradient(135deg,var(--mint),color-mix(in srgb,var(--pink) 45%,var(--mint)));color:var(--ink);border:2px solid var(--neon);box-shadow:0 0 14px -4px var(--neon)}
+.creator svg{width:18px;height:18px}
+.counts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0 4px}
+.counts button,.counts div{background:var(--desk);border:0;border-radius:16px;padding:8px 4px;cursor:pointer;text-align:center;color:var(--ink)}
+.counts b{display:block;font:700 1.3rem/1.1 var(--display)}
+.counts span{font-size:.75rem;font-weight:800;color:var(--muted)}
+.pubacts{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:12px}
+.btn.following{background:var(--page);color:var(--ink);border-color:var(--neon);box-shadow:none}
+.bcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.bcard{border:2px solid var(--line);background:var(--page);border-radius:20px;padding:10px;cursor:pointer;text-align:left;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:8px}
+.bcard .mc{height:110px;border-radius:10px 14px 14px 10px;background-color:var(--c);position:relative;box-shadow:0 4px 0 rgba(0,40,20,.2)}
+.bcard .mc::after{content:"";position:absolute;right:14px;top:0;bottom:0;width:9px;background:var(--b)}
+.bcard .mc span{position:absolute;left:12%;right:28%;top:30%;background:#fff;color:#1D3B2A;border-radius:10px;padding:4px 6px;font:700 .8rem/1.1 var(--display);text-align:center;overflow-wrap:anywhere}
+.bcard small{color:var(--muted);font-weight:800}
+.bcard b{line-height:1.2;overflow-wrap:anywhere}
+.ulist{display:flex;flex-direction:column;gap:8px;max-height:55vh;overflow:auto}
+.urow{display:flex;align-items:center;gap:10px;border:2px solid var(--line);background:var(--page);border-radius:16px;padding:8px;cursor:pointer;text-align:left}
+.urow .av{width:40px;height:40px;flex:none;border-radius:50%;background:var(--mint);padding:5px;line-height:0}
+.urow b{display:block}
+.urow span{font-size:.8rem;color:var(--muted)}
+.post .who{cursor:pointer}
+.credit{text-align:center;font-size:.85rem;color:var(--muted);margin:18px 0 0}
+.credit a{color:var(--neon-ink);font-weight:900}
+.uidrow{display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap;font-size:.75rem;color:var(--muted);margin-top:10px;overflow-wrap:anywhere}
+.backbar{display:flex;align-items:center;gap:8px;margin:4px 0 12px}
+/* ---------- seletor de cor ---------- */
+.cp-wrap{position:relative;width:240px;height:240px;margin:0 auto;touch-action:none}
+.cp-wrap canvas{width:240px;height:240px;border-radius:50%;display:block;cursor:crosshair}
+.cp-dot{position:absolute;width:26px;height:26px;border-radius:50%;border:4px solid #fff;box-shadow:0 0 0 2px rgba(0,0,0,.35),0 2px 6px rgba(0,0,0,.4);transform:translate(-50%,-50%);pointer-events:none}
+.cp-light{width:100%;height:18px;border-radius:999px;appearance:none;-webkit-appearance:none;margin-top:6px}
+.cp-light::-webkit-slider-thumb{-webkit-appearance:none;width:28px;height:28px;border-radius:50%;background:#fff;border:3px solid var(--ink);cursor:pointer}
+.cp-light::-moz-range-thumb{width:24px;height:24px;border-radius:50%;background:#fff;border:3px solid var(--ink);cursor:pointer}
+.cp-prev{display:flex;align-items:center;gap:10px;justify-content:center;margin-top:14px}
+.cp-prev i{width:42px;height:42px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 2px var(--line)}
+.sw button.rainbow{background:conic-gradient(red,#ff0,lime,cyan,blue,#f0f,red)!important}
+
+/* ---------- vários binders ---------- */
+.bchips{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 10px;margin:0 -2px;scrollbar-width:none}
+.bchips::-webkit-scrollbar{display:none}
+.bchip{flex:none;display:flex;align-items:center;gap:8px;border:2px solid var(--line);background:var(--page);border-radius:999px;padding:6px 14px 6px 6px;font-weight:800;font-size:.9rem;cursor:pointer;max-width:200px}
+.bchip span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bchip i{width:24px;height:24px;flex:none;border-radius:8px;background-color:var(--c);box-shadow:inset 0 0 0 2px rgba(0,0,0,.08)}
+.bchip[aria-pressed="true"]{border-color:var(--neon);box-shadow:0 0 0 3px color-mix(in srgb,var(--neon) 45%,transparent)}
+.bchip.add{padding:6px 14px;border-style:dashed;color:var(--neon-ink)}
+.blist{display:flex;flex-direction:column;gap:10px;margin-top:8px}
+.brow{display:flex;align-items:center;gap:12px;background:var(--desk);border-radius:18px;padding:8px 10px}
+.brow .mc{width:38px;height:48px;flex:none;border-radius:6px 9px 9px 6px;background-color:var(--c);position:relative;box-shadow:0 3px 0 rgba(0,40,20,.2)}
+.brow .mc::after{content:"";position:absolute;right:6px;top:0;bottom:0;width:5px;background:var(--b)}
+.brow .bt{flex:1;min-width:0}
+.brow .bt b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.brow .bt span{font-size:.8rem;color:var(--muted)}
+/* ---------- foto de perfil ---------- */
+.avimg{width:100%;height:100%;object-fit:cover;border-radius:50%;display:block}
+.bigav.photo,.avatar.photo,.post .who .av.photo{padding:0;overflow:hidden}
+.avbtns{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.private{font-size:.78rem;color:var(--muted);margin:4px 0 0}
+.help{width:42px;height:42px;border-radius:50%;border:2px solid var(--line);background:var(--page);font:700 1.2rem var(--display);cursor:pointer;color:var(--neon-ink)}
+.topr{display:flex;gap:8px;align-items:center}
+/* ---------- notificações ---------- */
+.bell{position:relative;display:flex;align-items:center;justify-content:center;padding:0}
+.bell svg{width:22px;height:22px}
+.bell i{position:absolute;top:-3px;right:-3px;min-width:18px;height:18px;padding:0 5px;border-radius:999px;background:#FF4D6D;color:#fff;font:700 .68rem/18px var(--display);font-style:normal;border:2px solid var(--page)}
+.nlist{display:flex;flex-direction:column;gap:8px;max-height:60vh;overflow:auto}
+.nitem{display:flex;align-items:center;gap:10px;padding:8px;border-radius:16px;background:var(--desk)}
+.nitem.new{background:var(--mint);box-shadow:inset 0 0 0 2px var(--neon)}
+.nitem .av{width:42px;height:42px;flex:none;border-radius:50%;background:var(--mint);padding:5px;line-height:0;cursor:pointer;border:0}
+.nitem .tx{flex:1;min-width:0;font-size:.92rem;line-height:1.3}
+.nitem .tx b{cursor:pointer}
+.nitem .tx span{display:block;font-size:.78rem;color:var(--muted)}
+
+/* ---------- tutorial ---------- */
+.tour{position:fixed;inset:0;z-index:100}
+.tour-hole{position:fixed;border-radius:20px;box-shadow:0 0 0 9999px rgba(5,30,16,.66);outline:3px solid var(--neon);outline-offset:3px;transition:all .35s cubic-bezier(.4,.1,.2,1);pointer-events:none}
+.tour-hole.none{outline:0;left:50%!important;top:50%!important;width:0!important;height:0!important}
+.tour-bub{position:fixed;left:16px;right:16px;max-width:440px;margin:0 auto;background:var(--page);color:var(--ink);border-radius:24px;padding:16px 16px 14px;box-shadow:0 0 0 3px var(--neon),0 20px 40px -12px rgba(0,0,0,.5);transition:top .35s,bottom .35s}
+.tour-bub .tm{display:flex;gap:12px;align-items:flex-start}
+.tour-bub .mascot{width:52px;flex:none}
+.tour-bub h3{font:700 1.15rem/1.2 var(--display);margin:2px 0 4px}
+.tour-bub p{margin:0;font-size:.95rem}
+.tour-dots{display:flex;gap:5px;margin:12px 0 0}
+.tour-dots i{width:8px;height:8px;border-radius:50%;background:var(--line)}
+.tour-dots i.on{background:var(--neon);width:20px;border-radius:999px}
+.tour-act{display:flex;gap:8px;align-items:center;margin-top:12px}
+.tour-act .grow{flex:1}
+
+/* ---------- mural ---------- */
+.feed{display:flex;flex-direction:column;gap:14px}
+.post{background:var(--page);border:2px solid var(--line);border-radius:24px;padding:12px;box-shadow:var(--shadow)}
+.post.done{opacity:.6}
+.post .who{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.post .who .av{width:38px;height:38px;flex:none;border-radius:50%;background:var(--mint);padding:5px;line-height:0}
+.post .who b{display:block;line-height:1.2}
+.post .who span{font-size:.8rem;color:var(--muted)}
+.post .body{display:flex;gap:12px}
+.post .ph{position:relative;width:118px;flex:none;aspect-ratio:55/85;border-radius:12px;overflow:hidden;background:var(--pocket)}
+.post .ph img{width:100%;height:100%;object-fit:cover;display:block}
+.post .ph .badge{top:6px;left:6px}
+.post .info{flex:1;min-width:0}
+.post .info b{display:block;font-size:1.05rem;line-height:1.25;overflow-wrap:anywhere}
+.post .info .mm{font-size:.85rem;color:var(--muted)}
+.post .msg{margin:8px 0 0;font-size:.92rem;overflow-wrap:anywhere}
+.post .want{font-size:.85rem;margin:8px 0 0;background:var(--mint);border-radius:10px;padding:4px 8px}
+.post .price{font:700 1.2rem var(--display);color:var(--pink-ink);margin-top:6px}
+.contact{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:12px;padding-top:10px;border-top:2px dashed var(--line)}
+.contact .handle{font-weight:900;color:var(--neon-ink);overflow-wrap:anywhere}
+.contact .net{font-size:.8rem;color:var(--muted)}
+.contact .sp{flex:1}
+.mine{display:flex;gap:8px;justify-content:flex-end;margin-top:10px}
+.pick{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-height:52vh;overflow:auto;padding:2px}
+.pick button{border:2px solid var(--line);background:var(--pocket);border-radius:12px;padding:4px;cursor:pointer;text-align:center;font-size:.72rem;font-weight:800}
+.pick img{width:100%;aspect-ratio:55/85;object-fit:cover;border-radius:8px;display:block;margin-bottom:3px}
+.annprev{display:flex;gap:12px;align-items:center;margin-bottom:6px}
+.annprev img{width:64px;aspect-ratio:55/85;object-fit:cover;border-radius:10px}
+.safety{font-size:.8rem;color:var(--muted);background:var(--desk);border-radius:12px;padding:8px 10px;margin-top:12px}
+
+/* ---------- desejos ---------- */
+.wlist{display:flex;flex-direction:column;gap:12px}
+.witem{display:flex;gap:12px;align-items:center;background:var(--page);border:2px solid var(--line);border-radius:20px;padding:10px;box-shadow:var(--shadow)}
+.witem .th{width:62px;flex:none;aspect-ratio:55/85;border-radius:10px;overflow:hidden;background:var(--pocket);display:flex;align-items:center;justify-content:center;padding:0;border:0;cursor:pointer}
+.witem .th img{width:100%;height:100%;object-fit:cover}
+.witem .th svg{width:60%}
+.witem .tx{flex:1;min-width:0}
+.witem .tx b{display:block;line-height:1.25;overflow-wrap:anywhere}
+.witem .tx span{font-size:.82rem;color:var(--muted)}
+.hearts{color:#FF5C8A;font-size:.95rem;letter-spacing:1px}
+.witem .act{display:flex;flex-direction:column;gap:6px;align-items:flex-end}
+.witem.got .tx b{text-decoration:line-through;text-decoration-color:var(--neon);text-decoration-thickness:3px}
+.witem.got{background:color-mix(in srgb,var(--page) 80%,var(--neon))}
+.prio{display:flex;gap:6px}
+.prio button{border:2px solid var(--line);background:var(--page);border-radius:999px;padding:5px 12px;cursor:pointer;color:#FF5C8A;font-weight:900}
+.prio button[aria-pressed="true"]{background:var(--pink);border-color:var(--pink);color:#4A0F28}
+
+/* ---------- eu ---------- */
+.prof{display:flex;gap:14px;align-items:center}
+.bigav{width:86px;height:86px;flex:none;border-radius:50%;background:var(--mint);border:3px solid var(--neon);padding:12px;box-shadow:0 0 18px -6px var(--neon)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0}
+.stat{background:var(--page);border:2px solid var(--line);border-radius:18px;padding:10px 4px;text-align:center}
+.stat b{display:block;font:700 1.5rem/1 var(--display);color:var(--neon-ink)}
+.stat span{font-size:.75rem;font-weight:800;color:var(--muted)}
+.mbar{display:grid;grid-template-columns:90px 1fr auto;gap:10px;align-items:center;margin:6px 0;font-size:.9rem;font-weight:800}
+.mbar span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mbar i{display:block;height:14px;border-radius:999px;background:var(--neon);min-width:14px}
+.sec{margin-top:16px}
+
+/* ---------- dialogs ---------- */
+dialog{border:0;border-radius:26px;padding:0;background:var(--page);color:var(--ink);width:min(500px,calc(100% - 24px));max-height:calc(100% - 24px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px))}
+dialog::backdrop{background:rgba(5,30,16,.55)}
+.dlg{padding:20px}
+.dlg h2{font:700 1.3rem/1.2 var(--display);margin:0 0 14px}
+.photo{display:flex;gap:14px;align-items:flex-start;margin-bottom:10px}
+.preview{width:118px;flex:none;aspect-ratio:55/85;border-radius:12px;background:var(--pocket);border:2px dashed var(--line);overflow:hidden;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:.8rem;text-align:center;padding:6px}
+.preview.has{padding:0;border-style:solid}
+.preview img{width:100%;height:100%;object-fit:cover}
+.photo-btns{display:flex;flex-direction:column;gap:8px}
+.code{display:inline-block;font-weight:900;color:var(--neon-ink);border:2px solid var(--neon);border-radius:8px;padding:1px 8px;font-size:.85rem}
+.actions{display:flex;gap:8px;justify-content:flex-end;margin-top:18px;flex-wrap:wrap}
+.actions .spacer{flex:1}
+.big{position:relative;width:min(240px,66%);aspect-ratio:55/85;margin:4px auto 18px}
+.big .pc{border-radius:14px;box-shadow:0 0 0 3px var(--neon),0 0 26px -4px var(--neon)}
+dl{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:0}
+dt{color:var(--muted);font-size:.9rem}
+dd{margin:0;font-weight:800;overflow-wrap:anywhere}
+.toast{position:fixed;left:50%;bottom:calc(92px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:#123A26;color:#E9FFF1;padding:10px 18px;border-radius:999px;font-weight:800;box-shadow:0 0 0 2px var(--neon);z-index:90;opacity:0;transition:opacity .25s;pointer-events:none;max-width:calc(100% - 32px);text-align:center}
+.toast.on{opacity:1}
+
+/* ---------- login ---------- */
+.auth{max-width:420px;margin:0 auto;padding:28px 18px 48px;text-align:center}
+.auth .mini{position:relative;width:150px;aspect-ratio:3/4;margin:6px auto 22px;border-radius:14px 18px 18px 14px;transform:rotate(-4deg);background-color:#8BE3AE;box-shadow:0 7px 0 -1px #3FB872,0 14px 24px -10px rgba(10,60,30,.45)}
+.auth .mini::after{content:"";position:absolute;right:18px;top:-2px;bottom:-2px;width:11px;background:#39F58A;box-shadow:0 0 12px #39F58A}
+.auth .mini span{position:absolute;left:12px;right:30px;top:30%;background:#fff;border-radius:10px;padding:6px;font:700 1rem/1.1 var(--display);color:#1D3B2A}
+.auth .mini .s1{position:absolute;width:42px;left:-14px;bottom:18px;transform:rotate(-14deg)}
+.auth .mini .s2{position:absolute;width:36px;right:-12px;top:-12px;transform:rotate(12deg)}
+.auth h1{font:700 2rem/1.1 var(--display);margin:0 0 6px}
+.auth form{text-align:left}
+.auth .tabs2{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:var(--desk);border-radius:999px;padding:4px;margin-bottom:6px}
+.auth .tabs2 button{border:0;border-radius:999px;padding:8px;font-weight:800;background:transparent;cursor:pointer}
+.auth .tabs2 button[aria-selected="true"]{background:var(--neon);color:var(--on-neon)}
+.wide{width:100%;margin-top:14px}
+.or{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:.85rem;margin:14px 0 0}
+.or::before,.or::after{content:"";flex:1;height:2px;background:var(--line)}
+.ok{color:var(--neon-ink);font-size:.88rem;font-weight:800;margin:8px 0 0}
+
+@media (max-width:420px){
+  .inside{padding:10px 8px 10px 34px}
+  .rings{left:5px}
+  .rings i{width:24px;height:12px}
+  .sheet{gap:6px;padding:22px 7px 8px}
+  .photo{flex-direction:column;align-items:center}
+  .photo-btns{width:100%}
+  .tgrid{grid-template-columns:1fr 1fr;gap:10px}
+  .stats{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+<style id="accentCss"></style>
+</head>
+<body>
+
+<!-- ================= LOGIN ================= -->
+<div class="auth" id="authView" hidden>
+  <div class="mini" aria-hidden="true"><span>My dear binder</span><i class="s1" data-st="coracao"></i><i class="s2" data-st="brilho"></i></div>
+  <h1>My dear binder</h1>
+  <p class="sub">Guarde seus photocards num binder fofo que fica salvo na nuvem.</p>
+  <form class="card" id="authForm" novalidate>
+    <div class="tabs2" role="tablist">
+      <button type="button" role="tab" id="tabIn" aria-selected="true">Entrar</button>
+      <button type="button" role="tab" id="tabUp" aria-selected="false">Criar conta</button>
+    </div>
+    <label for="aEmail">E-mail</label>
+    <input class="field" id="aEmail" type="email" autocomplete="email" required>
+    <label for="aPass">Senha</label>
+    <input class="field" id="aPass" type="password" autocomplete="current-password" minlength="6" required>
+    <div id="pass2Box" hidden>
+      <label for="aPass2">Repita a senha</label>
+      <input class="field" id="aPass2" type="password" autocomplete="new-password" minlength="6">
+    </div>
+    <p class="err" id="authErr"></p>
+    <p class="ok" id="authOk" hidden></p>
+    <button type="submit" class="btn primary wide" id="authSubmit">Entrar</button>
+    <button type="button" class="link" id="forgotBtn">Esqueci a senha</button>
+    <div class="or">ou</div>
+    <button type="button" class="btn wide" id="googleBtn">Entrar com Google</button>
+  </form>
+  <p class="credit">Criado by <a href="https://x.com/pur_pleki" target="_blank" rel="noopener noreferrer">@pur_pleki</a> 💚</p>
+</div>
+<div class="auth" id="bootView"><p class="sub" id="bootMsg">Carregando…</p></div>
+<script>
+  window.addEventListener("error", function(e){ var m = document.getElementById("bootMsg"); var v = document.getElementById("bootView");
+    if(m && v && !v.hidden) m.textContent = "Ops, o site não conseguiu abrir. Recarregue a página. (" + (e.message || "erro") + ")"; });
+  setTimeout(function(){ var m = document.getElementById("bootMsg"); var v = document.getElementById("bootView");
+    if(m && v && !v.hidden) m.textContent = "Está demorando… Confira a internet e recarregue a página."; }, 12000);
+</script>
+
+<!-- ================= APP ================= -->
+<div id="appView" hidden>
+  <header class="top">
+    <div class="brand"><i aria-hidden="true"></i>My dear binder</div>
+    <div class="topr">
+      <button class="help" id="helpBtn" aria-label="Ver tutorial de como usar o site">?</button>
+      <button class="help bell" id="bellBtn" aria-label="Notificações"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg><i id="bellDot" hidden></i></button>
+      <button class="avatar" id="topAvatar" aria-label="Abrir meu perfil"></button>
+    </div>
+  </header>
+
+  <main>
+    <!-- BINDER -->
+    <section class="view" id="v-binder" aria-label="Binder">
+      <div class="bchips" id="binderBar" aria-label="Meus binders"></div>
+      <div id="openBar" hidden>
+        <div class="bar">
+          <button class="btn small" id="closeBtn">Fechar binder</button>
+          <span class="grow"></span>
+          <button class="btn primary small" id="addBtn">+ Adicionar PC</button>
+        </div>
+        <div class="pills" id="pills"></div>
+        <div class="bar"><input class="search" id="search" type="search" placeholder="Buscar nome, membro, álbum ou código" aria-label="Buscar photocards"></div>
+      </div>
+
+      <div class="book" id="book">
+        <section class="inside" aria-label="Página do binder">
+          <div class="rings" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+          <div class="sheet" id="sheet"><span class="pagetag" id="pagetag">pág. 1</span></div>
+        </section>
+        <div class="cover p-xadrez" id="cover" role="button" tabindex="0" aria-label="Abrir binder">
+          <div class="spine"></div>
+          <div class="band"></div>
+          <div class="label" id="coverTitle">Meu binder</div>
+          <div id="stickers"></div>
+          <div class="hint">toque para abrir</div>
+        </div>
+      </div>
+
+      <div id="closedBar">
+        <div class="bar" style="justify-content:center;margin-top:26px">
+          <button class="btn primary" id="openBtn">Abrir binder</button>
+          <button class="btn pink" id="decoBtn">Personalizar</button>
+        </div>
+        <p class="note" id="countNote">Carregando…</p>
+      </div>
+
+      <nav class="pager" id="pager" hidden aria-label="Páginas">
+        <button class="btn small" id="prev">‹ Voltar</button>
+        <b id="pageLabel">1 de 1</b>
+        <button class="btn small" id="next">Virar ›</button>
+      </nav>
+      <p class="note" id="modeNote" hidden></p>
+
+      <section class="card panel" id="panel" hidden aria-label="Personalizar binder">
+        <div class="grp"><h3>Nome do binder</h3><input class="field" id="titleIn" maxlength="28" placeholder="Meu binder"></div>
+        <div class="grp"><h3>Cor da capa</h3><div class="sw" id="swCover"></div></div>
+        <div class="grp"><h3>Estampa</h3><div class="sw" id="swPattern"></div></div>
+        <div class="grp"><h3>Cor do elástico</h3><div class="sw round" id="swBand"></div></div>
+        <div class="grp"><h3>Argolas</h3><div class="sw round" id="swRing"></div></div>
+        <div class="grp"><h3>Cor das páginas</h3><div class="sw" id="swPage"></div></div>
+        <div class="grp" id="frameGrp"><h3>Adesivos com foto</h3>
+          <p class="note" style="text-align:left;margin:-4px 0 8px">Escolha a moldura e depois a foto.</p>
+          <div class="frames" id="frames"></div>
+        </div>
+        <div class="grp"><h3>Adesivos</h3><div class="tray" id="tray"></div></div>
+        <div class="grp"><h3>Adesivo de texto</h3>
+          <div class="inline"><input class="field" id="txtIn" maxlength="18" placeholder="Ex.: meu bias ♡"><button class="btn small" id="txtAdd">Colar</button></div>
+        </div>
+        <div class="grp" id="selTools" hidden><h3>Adesivo escolhido</h3>
+          <div class="inline">
+            <button class="btn small" id="sRot">Girar</button>
+            <button class="btn small" id="sBig">Aumentar</button>
+            <button class="btn small" id="sSmall">Diminuir</button>
+            <button class="btn small danger" id="sDel">Tirar</button>
+          </div>
+        </div>
+        <p class="note" style="text-align:left;margin:0 0 12px">Toque num adesivo para colar na capa e arraste para mudar de lugar.</p>
+        <div class="inline" style="justify-content:space-between;align-items:center">
+          <button class="btn primary" id="decoDone">Pronto</button>
+          <button class="btn small danger" id="delBinder">Excluir este binder</button>
+        </div>
+      </section>
+    </section>
+
+    <!-- TROCAS -->
+    <section class="view" id="v-trade" hidden aria-label="Trocas e vendas">
+      <h2 class="title">Trocas & vendas</h2>
+      <p class="sub">PCs que você marcou como "Para troca" ou "Para venda" aparecem aqui.</p>
+      <div class="seg" id="tradeSeg">
+        <button aria-pressed="true" data-f="all">Tudo</button>
+        <button aria-pressed="false" data-f="Para troca">Troca</button>
+        <button aria-pressed="false" data-f="Para venda">Venda</button>
+      </div>
+      <div class="bar" style="margin-top:0"><button class="btn small" id="copyTrade">Copiar lista pra postar</button></div>
+      <div class="tgrid" id="tradeGrid"></div>
+      <div class="empty" id="tradeEmpty" hidden><div class="em" data-st="sapo"></div><b>Nada por aqui ainda</b>No binder, abra um PC, toque em Editar e mude a situação para "Para troca" ou "Para venda".</div>
+    </section>
+
+    <!-- MURAL -->
+    <section class="view" id="v-mural" hidden aria-label="Mural de trocas e vendas">
+      <h2 class="title">Mural</h2>
+      <p class="sub">Anúncios de troca e venda de todo mundo do site. Toque na foto de alguém para ver o perfil e seguir.</p>
+      <button class="btn small" id="findBtn" style="margin-bottom:10px">🔎 Encontrar pessoas pelo @</button>
+      <div class="bar" style="margin-top:0">
+        <input class="search" id="muralSearch" type="search" placeholder="Buscar membro, grupo ou álbum" aria-label="Buscar no mural">
+        <button class="btn primary small" id="muralAdd">+ Anunciar</button>
+      </div>
+      <div class="seg" id="muralSeg">
+        <button aria-pressed="true" data-f="all">Tudo</button>
+        <button aria-pressed="false" data-f="troca">Troca</button>
+        <button aria-pressed="false" data-f="venda">Venda</button>
+        <button aria-pressed="false" data-f="following">Seguindo</button>
+        <button aria-pressed="false" data-f="mine">Meus</button>
+      </div>
+      <div class="feed" id="feed"></div>
+      <div class="empty" id="feedEmpty" hidden><div class="em" data-st="nuvem"></div><b id="feedEmptyT">O mural está quietinho</b><span id="feedEmptyS">Seja a primeira pessoa a anunciar um PC!</span></div>
+      <p class="note" id="muralNote" hidden></p>
+    </section>
+
+    <!-- PERFIL PÚBLICO -->
+    <section class="view" id="v-user" hidden aria-label="Perfil">
+      <div class="backbar"><button class="btn small" id="userBack">‹ Voltar</button></div>
+      <div id="userBox"></div>
+    </section>
+
+    <!-- DESEJOS -->
+    <section class="view" id="v-wish" hidden aria-label="Lista de desejos">
+      <h2 class="title">Lista de desejos</h2>
+      <p class="sub">Os PCs que você ainda está caçando.</p>
+      <div class="bar" style="margin-top:0">
+        <div class="seg" id="wishSeg" style="flex:1;margin:0">
+          <button aria-pressed="true" data-f="hunt">Caçando</button>
+          <button aria-pressed="false" data-f="got">Consegui</button>
+        </div>
+        <button class="btn primary small" id="wishAdd">+ Desejo</button>
+      </div>
+      <div class="wlist" id="wishList"></div>
+      <div class="empty" id="wishEmpty" hidden><div class="em" data-st="estrela"></div><b id="wishEmptyT">Sua lista está vazia</b><span id="wishEmptyS">Adicione o PC que você mais quer conseguir.</span></div>
+    </section>
+
+    <!-- EU -->
+    <section class="view" id="v-me" hidden aria-label="Meu perfil">
+      <div class="card" id="profCard">
+        <div class="prof">
+          <div class="bigav" id="bigAv"></div>
+          <div style="min-width:0">
+            <h2 class="title" id="meName">Colecionador(a)</h2>
+            <span class="note" id="meUser" style="display:block;text-align:left;margin:0;color:var(--neon-ink);font-weight:900"></span>
+            <span class="note" id="meEmail" style="display:block;text-align:left;margin:0;overflow-wrap:anywhere"></span>
+            <div id="meBadge"></div>
+            <div class="avbtns">
+              <button class="btn small primary" id="photoBtn">Trocar foto</button>
+              <button class="btn small" id="photoDel" hidden>Usar adesivo</button>
+            </div>
+          </div>
+        </div>
+        <div class="counts" id="myStats">
+          <div><b id="cPosts">–</b><span>anúncios</span></div>
+          <button type="button" id="cFollowers"><b>–</b><span>seguidores</span></button>
+          <button type="button" id="cFollowing"><b>–</b><span>seguindo</span></button>
+        </div>
+        <button class="btn small pink" id="viewMine" style="width:100%;margin-top:6px">Ver meu perfil público</button>
+        <div id="unBox">
+          <label for="pUser">Seu @ no My dear binder</label>
+          <div class="inline"><input class="field" id="pUser" maxlength="20" placeholder="ex.: colecionadora.pcs" autocapitalize="none" autocomplete="off" spellcheck="false"><button class="btn small primary" id="unSave">Salvar @</button></div>
+          <p class="private" id="unMsg">É com ele que as pessoas encontram e seguem você. Use letras, números, ponto ou _.</p>
+        </div>
+        <label for="pNick">Nome</label>
+        <input class="field" id="pNick" maxlength="30" placeholder="Como quer ser chamada(o)?">
+        <label for="pBio">Bio</label>
+        <textarea class="field" id="pBio" rows="2" maxlength="160" placeholder="Conte um pouquinho sobre você e sua coleção"></textarea>
+        <p class="private">Seu nome, foto, bio e binders aparecem no seu perfil público. Sua lista de desejos não.</p>
+        <div class="row">
+          <div><label for="pContact">@ para contato</label><input class="field" id="pContact" maxlength="40" placeholder="Ex.: @seuarroba"></div>
+          <div><label for="pNet">Rede social</label><select class="field" id="pNet"><option>Instagram</option><option>X (Twitter)</option><option>TikTok</option><option>Outra</option></select></div>
+        </div>
+        <p class="private">É por esse @ que as pessoas falam com você sobre trocas e vendas.</p>
+        <div id="avPick">
+          <label>Adesivo de avatar (quando não tem foto)</label>
+          <div class="tray" id="avTray"></div>
+        </div>
+      </div>
+
+      <div class="card sec">
+        <h2 class="title" style="font-size:1.15rem">Meus binders</h2>
+        <div class="blist" id="bList"></div>
+        <button class="btn primary small" id="bAddMe" style="margin-top:12px">+ Adicionar binder</button>
+      </div>
+
+      <div class="stats" id="stats"></div>
+
+      <div class="card sec">
+        <h2 class="title" style="font-size:1.15rem">PCs por membro</h2>
+        <div id="mbars"></div>
+      </div>
+
+      <div class="card sec">
+        <h2 class="title" style="font-size:1.15rem">Aparência</h2>
+        <label style="margin-top:4px">Cor do site</label>
+        <div class="sw round" id="accentSw"></div>
+        <label>Tema</label>
+        <div class="seg" id="themeSeg" style="margin:8px 0 0">
+          <button data-t="auto" aria-pressed="true">Automático</button>
+          <button data-t="light" aria-pressed="false">Claro</button>
+          <button data-t="dark" aria-pressed="false">Escuro</button>
+        </div>
+      </div>
+
+      <div class="card sec" id="sugCard">
+        <h2 class="title" style="font-size:1.15rem">Sugestões</h2>
+        <p class="sub" style="margin-bottom:10px">Achou um problema ou teve uma ideia? Manda pra gente!</p>
+        <button class="btn primary" id="sugBtn">Enviar sugestão</button>
+      </div>
+
+      <div class="card sec">
+        <h2 class="title" style="font-size:1.15rem">Como usar o site</h2>
+        <p class="sub" style="margin-bottom:10px">Um passo a passo rapidinho por todas as partes do site.</p>
+        <button class="btn pink" id="tourBtn">Ver tutorial</button>
+      </div>
+
+      <div class="bar" style="justify-content:center;margin-top:20px"><button class="btn danger" id="logoutBtn">Sair da conta</button></div>
+      <div class="uidrow"><span>ID da conta: <span id="myUid"></span></span><button class="link" id="copyUid" style="font-size:.75rem">copiar</button></div>
+      <p class="credit">Criado by <a href="https://x.com/pur_pleki" target="_blank" rel="noopener noreferrer">@pur_pleki</a> 💚</p>
+    </section>
+  </main>
+
+  <nav class="tabs" aria-label="Seções">
+    <div class="in" role="tablist">
+      <button role="tab" data-tab="binder" aria-selected="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="15" height="18" rx="3"/><path d="M5 8H3M5 12H3M5 16H3M15 3v18"/></svg>Binder</button>
+      <button role="tab" data-tab="trade" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h13l-3-3M20 16H7l3 3"/></svg>Trocas</button>
+      <button role="tab" data-tab="mural" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 9h8M8 12h5"/></svg>Mural</button>
+      <button role="tab" data-tab="wish" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M12 20C6 16 3 12.5 3 9a4.5 4.5 0 0 1 9-1.5A4.5 4.5 0 0 1 21 9c0 3.5-3 7-9 11z"/></svg>Desejos</button>
+      <button role="tab" data-tab="me" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M8.5 14.5q3.5 3 7 0"/><path d="M9 9.5h.01M15 9.5h.01" stroke-width="3"/></svg>Eu</button>
+    </div>
+  </nav>
+</div>
+
+<!-- ================= DIALOGS ================= -->
+<dialog id="editDlg">
+  <form class="dlg" id="editForm" method="dialog">
+    <h2 id="editTitle">Novo photocard</h2>
+    <div class="photo">
+      <div class="preview" id="preview">Sem foto ainda</div>
+      <div class="photo-btns">
+        <button type="button" class="btn primary small" id="camBtn">Escanear com a câmera</button>
+        <button type="button" class="btn small" id="galBtn">Escolher da galeria</button>
+        <button type="button" class="btn small" id="rotBtn" disabled>Editar foto</button>
+        <span id="codeShow"></span>
+      </div>
+    </div>
+    <label for="fName">Nome do PC</label>
+    <input class="field" id="fName" placeholder="Ex.: Foto de jaqueta, versão A" maxlength="80">
+    <div class="row">
+      <div><label for="fMember">Membro</label><input class="field" id="fMember" placeholder="Nome do membro" maxlength="40"></div>
+      <div><label for="fGroup">Grupo</label><input class="field" id="fGroup" placeholder="Nome do grupo" maxlength="40"></div>
+    </div>
+    <label for="fSource">De onde é</label>
+    <input class="field" id="fSource" placeholder="Álbum, versão ou loja (ex.: POB, lucky draw)" maxlength="80">
+    <div class="row">
+      <div><label for="fKind">Tipo</label>
+        <select class="field" id="fKind"><option>Álbum</option><option>POB</option><option>Lucky draw</option><option>Fansign</option><option>MD / merch</option><option>Trading card</option><option>Outro</option></select></div>
+      <div><label for="fStatus">Situação</label>
+        <select class="field" id="fStatus"><option>Na coleção</option><option>Para troca</option><option>Para venda</option></select></div>
+    </div>
+    <div id="wantBox" hidden><label for="fWant">Procuro em troca</label><input class="field" id="fWant" maxlength="80" placeholder="Qual PC você quer em troca?"></div>
+    <div id="priceBox" hidden><label for="fPrice">Preço (R$)</label><input class="field" id="fPrice" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Ex.: 25"></div>
+    <label for="fBinder">Binder</label>
+    <select class="field" id="fBinder"></select>
+    <label for="fProtect">Proteção no binder</label>
+    <select class="field" id="fProtect"><option value="none">Sem proteção</option><option value="sleeve">Sleeve</option><option value="double">Double sleeve</option><option value="top">Toploader</option><option value="deco">Toploader decorado</option></select>
+    <label for="fSleeveDate">Sleeve colocada ou trocada em</label>
+    <input class="field" id="fSleeveDate" type="date">
+    <label for="fNote">Observação</label>
+    <textarea class="field" id="fNote" rows="2" maxlength="300" placeholder="Opcional"></textarea>
+    <p class="err" id="editErr"></p>
+    <div class="actions">
+      <button type="button" class="btn" id="cancelEdit">Cancelar</button>
+      <button type="submit" class="btn primary" id="saveBtn">Guardar no binder</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="viewDlg">
+  <div class="dlg">
+    <div class="big" id="vImg"></div>
+    <h2 id="vName"></h2>
+    <dl id="vList"></dl>
+    <p class="err" id="viewErr"></p>
+    <div class="actions">
+      <button class="btn danger small" id="delBtn">Excluir</button>
+      <span class="spacer"></span>
+      <button class="btn small" id="moveBtn">Mudar de lugar</button>
+      <button class="btn small pink" id="annBtn" hidden>Anunciar</button>
+      <button class="btn small" id="closeView">Fechar</button>
+      <button class="btn primary small" id="editBtn">Editar</button>
+    </div>
+  </div>
+</dialog>
+
+<dialog id="wishDlg">
+  <form class="dlg" id="wishForm" method="dialog">
+    <h2 id="wishTitle">Novo desejo</h2>
+    <div class="photo">
+      <div class="preview" id="wPreview">Foto opcional</div>
+      <div class="photo-btns">
+        <button type="button" class="btn small" id="wGalBtn">Escolher foto</button>
+        <button type="button" class="btn small" id="wNoPhoto" hidden>Tirar foto</button>
+      </div>
+    </div>
+    <label for="wName">Qual PC?</label>
+    <input class="field" id="wName" maxlength="80" placeholder="Ex.: membro + álbum + versão">
+    <div class="row">
+      <div><label for="wMember">Membro</label><input class="field" id="wMember" maxlength="40" placeholder="Nome do membro"></div>
+      <div><label for="wGroup">Grupo</label><input class="field" id="wGroup" maxlength="40" placeholder="Nome do grupo"></div>
+    </div>
+    <label for="wSource">De onde é</label>
+    <input class="field" id="wSource" maxlength="80" placeholder="Álbum, versão ou loja">
+    <label>Quanto você quer?</label>
+    <div class="prio" id="wPrio">
+      <button type="button" data-p="1" aria-pressed="false">♥</button>
+      <button type="button" data-p="2" aria-pressed="true">♥♥</button>
+      <button type="button" data-p="3" aria-pressed="false">♥♥♥</button>
+    </div>
+    <p class="err" id="wishErr"></p>
+    <div class="actions">
+      <button type="button" class="btn danger small" id="wDel" hidden>Excluir</button>
+      <span class="spacer"></span>
+      <button type="button" class="btn" id="wCancel">Cancelar</button>
+      <button type="submit" class="btn primary" id="wSave">Salvar</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="pickDlg">
+  <div class="dlg">
+    <h2>Qual PC você quer anunciar?</h2>
+    <p class="sub" id="pickSub">Aparecem aqui os PCs do seu binder marcados como "Para troca" ou "Para venda".</p>
+    <div class="pick" id="pickGrid"></div>
+    <div class="actions"><button class="btn" id="pickClose">Fechar</button></div>
+  </div>
+</dialog>
+
+<dialog id="annDlg">
+  <form class="dlg" id="annForm" method="dialog">
+    <h2>Anunciar no mural</h2>
+    <div class="annprev"><img id="annImg" alt=""><div><b id="annName"></b><div class="note" id="annMeta" style="text-align:left;margin:0"></div></div></div>
+    <label for="annType">Quero</label>
+    <select class="field" id="annType"><option value="troca">Trocar</option><option value="venda">Vender</option></select>
+    <div id="annWantBox"><label for="annWant">Procuro em troca</label><input class="field" id="annWant" maxlength="80" placeholder="Qual PC você quer em troca?"></div>
+    <div id="annPriceBox" hidden><label for="annPrice">Preço (R$)</label><input class="field" id="annPrice" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Ex.: 25"></div>
+    <label for="annMsg">Recado (opcional)</label>
+    <textarea class="field" id="annMsg" rows="2" maxlength="200" placeholder="Ex.: Envio pelos Correios, aceito propostas"></textarea>
+    <div class="row">
+      <div><label for="annContact">Seu @</label><input class="field" id="annContact" maxlength="40" placeholder="@seuarroba"></div>
+      <div><label for="annNet">Rede social</label><select class="field" id="annNet"><option>Instagram</option><option>X (Twitter)</option><option>TikTok</option><option>Outra</option></select></div>
+    </div>
+    <p class="safety">Seu anúncio, seu apelido e seu @ ficam visíveis para todo mundo que tem conta no site. Combine pagamento e envio com cuidado e só com quem você confia.</p>
+    <p class="err" id="annErr"></p>
+    <div class="actions">
+      <button type="button" class="btn" id="annCancel">Cancelar</button>
+      <button type="submit" class="btn primary" id="annSave">Publicar</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="nbDlg">
+  <form class="dlg" id="nbForm" method="dialog">
+    <h2>Novo binder</h2>
+    <label for="nbName">Nome do binder</label>
+    <input class="field" id="nbName" maxlength="28" placeholder="Ex.: Meu bias, Trocas, Coleção 2026">
+    <label>Cor da capa</label>
+    <div class="sw" id="nbColors"></div>
+    <p class="err" id="nbErr"></p>
+    <div class="actions">
+      <button type="button" class="btn" id="nbCancel">Cancelar</button>
+      <button type="submit" class="btn primary" id="nbSave">Criar binder</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="findDlg">
+  <form class="dlg" id="findForm" method="dialog">
+    <h2>Encontrar pessoas</h2>
+    <label for="findIn">Digite o @ da pessoa no My dear binder</label>
+    <input class="field" id="findIn" maxlength="21" placeholder="@usuario" autocapitalize="none" autocomplete="off" spellcheck="false">
+    <p class="err" id="findErr"></p>
+    <div class="actions">
+      <button type="button" class="btn" id="findCancel">Cancelar</button>
+      <button type="submit" class="btn primary" id="findGo">Ver perfil</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="listDlg">
+  <div class="dlg">
+    <h2 id="listTitle">Seguidores</h2>
+    <div class="ulist" id="listBox"></div>
+    <div class="actions"><button type="button" class="btn" id="listClose">Fechar</button></div>
+  </div>
+</dialog>
+
+<dialog id="roDlg">
+  <div class="dlg">
+    <div class="big" id="roImg"></div>
+    <h2 id="roName"></h2>
+    <dl id="roList"></dl>
+    <div class="actions"><button type="button" class="btn" id="roClose">Fechar</button></div>
+  </div>
+</dialog>
+
+<dialog id="cpDlg">
+  <div class="dlg">
+    <h2>Escolha qualquer cor</h2>
+    <p class="note" style="margin:-6px 0 12px">Arraste o dedo no círculo para escolher a cor.</p>
+    <div class="cp-wrap" id="cpWrap"><canvas id="cpWheel" width="480" height="480"></canvas><div class="cp-dot" id="cpDot"></div></div>
+    <label for="cpLight" style="margin-top:14px">Mais escuro ↔ mais claro</label>
+    <input type="range" class="cp-light" id="cpLight" min="22" max="78" step="1" value="58">
+    <div class="cp-prev"><i id="cpPrev"></i><b id="cpHex"></b></div>
+    <div class="actions">
+      <button type="button" class="btn" id="cpCancel">Cancelar</button>
+      <button type="button" class="btn primary" id="cpOk">Usar essa cor</button>
+    </div>
+  </div>
+</dialog>
+
+<dialog id="notifDlg">
+  <div class="dlg">
+    <h2>Notificações</h2>
+    <div class="nlist" id="notifList"></div>
+    <div class="actions"><button type="button" class="btn" id="notifClose">Fechar</button></div>
+  </div>
+</dialog>
+
+<dialog id="shareDlg">
+  <div class="dlg" style="text-align:center">
+    <div style="width:96px;margin:0 auto 6px" data-st="sapo"></div>
+    <span class="tname" style="display:inline-block;font:700 .75rem var(--display);background:var(--mint);color:var(--neon-ink);border-radius:999px;padding:1px 10px">Tito</span>
+    <h2 style="margin:6px 0 8px">Está gostando do site? 💚</h2>
+    <p style="margin:0 0 10px">Compartilhe com seus amigos e dê seu feedback no X, marcando <b>@pur_pleki</b>, contando sua experiência!</p>
+    <p class="note" style="margin:0 0 14px">Se tiver alguma sugestão ou alerta de bug, me chame pelo botão de <b>Sugestões</b> no seu perfil!</p>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <a class="btn primary" id="shareX" href="https://x.com/pur_pleki" target="_blank" rel="noopener noreferrer" style="text-decoration:none">Abrir @pur_pleki no X</a>
+      <button type="button" class="btn pink" id="shareSite">Compartilhar o site</button>
+      <button type="button" class="btn" id="shareSug">Enviar sugestão</button>
+      <button type="button" class="link" id="shareLater">Agora não</button>
+    </div>
+  </div>
+</dialog>
+
+<dialog id="moveDlg">
+  <form class="dlg" id="moveForm" method="dialog">
+    <h2>Mudar de lugar</h2>
+    <div class="annprev"><img id="moveImg" alt=""><div><b id="moveName"></b><div class="note" id="moveNow" style="text-align:left;margin:0"></div></div></div>
+    <label for="moveTo">Para qual lugar?</label>
+    <input class="field" id="moveTo" type="number" inputmode="numeric" min="1" max="999" step="1" placeholder="Ex.: 5">
+    <p class="note" id="moveHint" style="text-align:left">Se já tiver um PC nesse lugar, os dois trocam de lugar.</p>
+    <p class="err" id="moveErr"></p>
+    <div class="actions">
+      <button type="button" class="btn" id="moveCancel">Cancelar</button>
+      <button type="submit" class="btn primary" id="moveOk">Mudar</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="edDlg">
+  <div class="dlg">
+    <h2>Editar foto</h2>
+    <div class="ed-stage" id="edStage"><canvas id="edCanvas"></canvas><div class="grid"></div></div>
+    <p class="note">Arraste a foto para ajustar o corte.</p>
+    <div class="ed-zoom"><span>Zoom</span><input type="range" id="edZoom" min="1" max="4" step="0.01" value="1" aria-label="Zoom"></div>
+    <div class="ed-tools">
+      <button type="button" class="btn small" id="edRotL">↺ Girar</button>
+      <button type="button" class="btn small" id="edRotR">Girar ↻</button>
+      <button type="button" class="btn small" id="edFlip">Espelhar</button>
+      <button type="button" class="btn small" id="edReset">Desfazer</button>
+    </div>
+    <div class="actions">
+      <button type="button" class="btn" id="edCancel">Cancelar</button>
+      <button type="button" class="btn primary" id="edOk">Usar foto</button>
+    </div>
+  </div>
+</dialog>
+
+<dialog id="sugDlg">
+  <form class="dlg" id="sugForm" method="dialog">
+    <h2>Enviar sugestão</h2>
+    <div id="sugBody">
+      <label for="sugSubj">Assunto</label>
+      <select class="field" id="sugSubj"><option>Relatar um problema</option><option>Sugestão</option><option>Elogio</option><option>Dúvida</option><option>Outro</option></select>
+      <label for="sugMsg">Mensagem</label>
+      <textarea class="field" id="sugMsg" rows="5" maxlength="2000" placeholder="Conta pra gente o que aconteceu ou o que você gostaria de ver no site"></textarea>
+      <label for="sugMail">Seu e-mail para resposta (opcional)</label>
+      <input class="field" id="sugMail" type="email" maxlength="120">
+      <p class="err" id="sugErr"></p>
+      <div class="actions">
+        <button type="button" class="btn" id="sugCancel">Cancelar</button>
+        <button type="submit" class="btn primary" id="sugSend">Enviar</button>
+      </div>
+    </div>
+    <div class="sug-ok" id="sugDone" hidden>
+      <div style="width:90px;margin:0 auto 8px" data-st="sapo"></div>
+      <b style="font:600 1.2rem var(--display)">Recebido, obrigado! 💚</b>
+      <p class="note">O Tito já levou sua mensagem.</p>
+      <div class="actions" style="justify-content:center"><button type="button" class="btn primary" id="sugClose">Fechar</button></div>
+    </div>
+  </form>
+</dialog>
+
+<div class="tour" id="tour" hidden role="dialog" aria-modal="true" aria-labelledby="tourT">
+  <div class="tour-hole none" id="tourHole"></div>
+  <div class="tour-bub" id="tourBub">
+    <div class="tm">
+      <div class="mascot" data-st="sapo"></div>
+      <div><span class="tname">Tito</span><h3 id="tourT"></h3><p id="tourD"></p></div>
+    </div>
+    <div class="tour-dots" id="tourDots"></div>
+    <div class="tour-act">
+      <button class="link" id="tourSkip">Pular</button>
+      <span class="grow"></span>
+      <button class="btn small" id="tourBack">Voltar</button>
+      <button class="btn small primary" id="tourNext">Próximo</button>
+    </div>
+  </div>
+</div>
+
+<input type="file" id="photoInput" accept="image/*" hidden>
+<input type="file" id="frameInput" accept="image/*" hidden>
+<input type="file" id="camInput" accept="image/*" capture="environment" hidden>
+<input type="file" id="galInput" accept="image/*" hidden>
+<input type="file" id="wGalInput" accept="image/*" hidden>
+<div class="toast" id="toast" role="status"></div>
+
+<script type="module">
+/*FB-START*/
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword,
+  sendPasswordResetEmail, signOut, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, collection, doc, onSnapshot, setDoc, deleteDoc, updateDoc, query as fsQuery, orderBy, limit, where, getDoc, getDocs, getCountFromServer } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const fbApp = initializeApp({
+  apiKey: "AIzaSyCqLRoBQuKAyB9rhLYC00q2gspgGmaSoj8",
+  authDomain: "my-dear-binder.firebaseapp.com",
+  projectId: "my-dear-binder",
+  storageBucket: "my-dear-binder.firebasestorage.app",
+  messagingSenderId: "876875507655",
+  appId: "1:876875507655:web:d865125fea3b83a2631be2"
+});
+const auth = getAuth(fbApp); auth.languageCode = "pt";
+const fs = getFirestore(fbApp);
+const FB = {
+  onUser: cb => onAuthStateChanged(auth, cb),
+  signIn: (e, p) => signInWithEmailAndPassword(auth, e, p),
+  signUp: (e, p) => createUserWithEmailAndPassword(auth, e, p),
+  reset: e => sendPasswordResetEmail(auth, e),
+  google: () => signInWithPopup(auth, new GoogleAuthProvider()),
+  out: () => signOut(auth),
+  watchCol: (uid, name, cb, err) => onSnapshot(collection(fs, "users", uid, name), s => cb(s.docs.map(d => Object.assign({id: d.id}, d.data()))), err),
+  watchDoc: (uid, name, cb, err) => onSnapshot(doc(fs, "users", uid, "settings", name), s => cb(s.exists() ? s.data() : null), err),
+  put: (uid, name, id, data) => setDoc(doc(fs, "users", uid, name, id), data),
+  del: (uid, name, id) => deleteDoc(doc(fs, "users", uid, name, id)),
+  putDoc: (uid, name, data) => setDoc(doc(fs, "users", uid, "settings", name), data),
+  watchPosts: (cb, err) => onSnapshot(fsQuery(collection(fs, "posts"), orderBy("createdAt", "desc"), limit(80)), s => cb(s.docs.map(d => Object.assign({id: d.id}, d.data()))), err),
+  putPost: (id, data) => setDoc(doc(fs, "posts", id), data),
+  patchPost: (id, data) => updateDoc(doc(fs, "posts", id), data),
+  delPost: id => deleteDoc(doc(fs, "posts", id)),
+  getProfile: async u => { const s = await getDoc(doc(fs, "profiles", u)); return s.exists() ? s.data() : null; },
+  putProfile: (u, data) => setDoc(doc(fs, "profiles", u), data),
+  getUsername: async n => { const s = await getDoc(doc(fs, "usernames", n)); return s.exists() ? s.data() : null; },
+  claimUsername: (n, u) => setDoc(doc(fs, "usernames", n), { uid: u }),
+  releaseUsername: n => deleteDoc(doc(fs, "usernames", n)),
+  follow: (me, to) => setDoc(doc(fs, "follows", me + "_" + to), { from: me, to, at: Date.now() }),
+  unfollow: (me, to) => deleteDoc(doc(fs, "follows", me + "_" + to)),
+  isFollowing: async (me, to) => (await getDoc(doc(fs, "follows", me + "_" + to))).exists(),
+  countFollowers: async u => (await getCountFromServer(fsQuery(collection(fs, "follows"), where("to", "==", u)))).data().count,
+  countFollowing: async u => (await getCountFromServer(fsQuery(collection(fs, "follows"), where("from", "==", u)))).data().count,
+  countPosts: async u => (await getCountFromServer(fsQuery(collection(fs, "posts"), where("uid", "==", u), where("status", "==", "ativo")))).data().count,
+  listFollowers: async u => (await getDocs(fsQuery(collection(fs, "follows"), where("to", "==", u), limit(200)))).docs.map(d => d.data().from),
+  listFollowing: async u => (await getDocs(fsQuery(collection(fs, "follows"), where("from", "==", u), limit(200)))).docs.map(d => d.data().to),
+  watchFollowers: (me, cb, err) => onSnapshot(fsQuery(collection(fs, "follows"), where("to", "==", me)), s => cb(s.docs.map(d => d.data())), err),
+  watchFollowing: (me, cb, err) => onSnapshot(fsQuery(collection(fs, "follows"), where("from", "==", me)), s => cb(new Set(s.docs.map(d => d.data().to))), err),
+  getUserBinders: async u => (await getDocs(collection(fs, "users", u, "binders"))).docs.map(d => Object.assign({id: d.id}, d.data())),
+  getUserPcs: async u => (await getDocs(collection(fs, "users", u, "pcs"))).docs.map(d => Object.assign({id: d.id}, d.data())),
+  getUserPosts: async u => (await getDocs(fsQuery(collection(fs, "posts"), where("uid", "==", u), limit(60)))).docs.map(d => Object.assign({id: d.id}, d.data()))
+};
+/*FB-END*/
+
+const $ = id => document.getElementById(id);
+const PER = 9;
+
+/* ---------- adesivos ---------- */
+const S = inner => '<svg class="st" viewBox="0 0 100 100" aria-hidden="true">' + inner + '</svg>';
+const O = 'stroke="#fff" stroke-width="7" stroke-linejoin="round" paint-order="stroke"';
+const STICKERS = {
+  coracao: S('<path '+O+' fill="#FF8DBE" d="M50 86C20 64 8 48 8 32 8 18 19 8 32 8c8 0 14 4 18 11 4-7 10-11 18-11 13 0 24 10 24 24 0 16-12 32-42 54z"/><ellipse cx="30" cy="28" rx="7" ry="4" fill="#fff" opacity=".6" transform="rotate(-30 30 28)"/>'),
+  estrela: S('<polygon '+O+' fill="#FFE066" points="50,6 62,36 94,38 69,58 78,90 50,72 22,90 31,58 6,38 38,36"/><circle cx="42" cy="50" r="3.5" fill="#5A4300"/><circle cx="58" cy="50" r="3.5" fill="#5A4300"/>'),
+  brilho: S('<path '+O+' fill="#39F58A" d="M50 5c5 30 15 40 45 45-30 5-40 15-45 45-5-30-15-40-45-45 30-5 40-15 45-45z"/>'),
+  trevo: S('<g '+O+' fill="#3CCB6E"><circle cx="35" cy="35" r="17"/><circle cx="65" cy="35" r="17"/><circle cx="35" cy="65" r="17"/><circle cx="65" cy="65" r="17"/></g><circle cx="50" cy="50" r="9" fill="#2DA85A"/>'),
+  laco: S('<g '+O+' fill="#FF9EC7"><path d="M50 50 12 26c-6 14-6 34 0 48z"/><path d="M50 50 88 26c6 14 6 34 0 48z"/><circle cx="50" cy="50" r="11"/></g>'),
+  nuvem: S('<path '+O+' fill="#fff" d="M26 74c-11 0-18-8-18-17 0-10 8-17 18-17 2-12 12-20 24-20 13 0 22 9 24 20 10 0 18 7 18 17s-8 17-18 17z"/><circle cx="40" cy="55" r="3" fill="#1D3B2A"/><circle cx="60" cy="55" r="3" fill="#1D3B2A"/><path d="M45 63q5 5 10 0" stroke="#1D3B2A" stroke-width="3" fill="none" stroke-linecap="round"/>'),
+  cereja: S('<path d="M30 70 52 14 74 66" stroke="#2DA85A" stroke-width="5" fill="none" stroke-linecap="round"/><g '+O+' fill="#FF5C8A"><circle cx="30" cy="72" r="16"/><circle cx="72" cy="68" r="16"/></g><path d="M52 14q14-8 24 2-12 6-24-2z" fill="#3CCB6E"/>'),
+  carinha: S('<circle '+O+' cx="50" cy="50" r="40" fill="#C9F5DA"/><circle cx="37" cy="44" r="5" fill="#1D3B2A"/><circle cx="63" cy="44" r="5" fill="#1D3B2A"/><path d="M36 60q14 13 28 0" stroke="#1D3B2A" stroke-width="5" fill="none" stroke-linecap="round"/><circle cx="28" cy="58" r="6" fill="#FF9EC7" opacity=".8"/><circle cx="72" cy="58" r="6" fill="#FF9EC7" opacity=".8"/>'),
+  sapo: S('<g '+O+' fill="#5FDB8E"><ellipse cx="50" cy="60" rx="38" ry="28"/><circle cx="30" cy="34" r="14"/><circle cx="70" cy="34" r="14"/></g><circle cx="30" cy="34" r="6" fill="#1D3B2A"/><circle cx="70" cy="34" r="6" fill="#1D3B2A"/><path d="M38 64q12 9 24 0" stroke="#1D3B2A" stroke-width="4" fill="none" stroke-linecap="round"/><circle cx="24" cy="62" r="5" fill="#FF9EC7" opacity=".8"/><circle cx="76" cy="62" r="5" fill="#FF9EC7" opacity=".8"/>'),
+  lua: S('<path '+O+' fill="#FFE066" d="M62 8a42 42 0 1 0 30 62A34 34 0 1 1 62 8z"/>'),
+  gato: S('<g '+O+' fill="#fff"><path d="M18 40 22 10l22 18h12l22-18 4 30c4 6 6 13 6 20 0 18-18 30-38 30S12 78 12 60c0-7 2-14 6-20z"/></g><circle cx="36" cy="56" r="5" fill="#1D3B2A"/><circle cx="64" cy="56" r="5" fill="#1D3B2A"/><path d="M45 66q5 4 10 0" stroke="#1D3B2A" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="26" cy="66" r="5" fill="#FF9EC7"/><circle cx="74" cy="66" r="5" fill="#FF9EC7"/>'),
+  coelho: S('<g '+O+' fill="#FFE0EE"><ellipse cx="34" cy="26" rx="10" ry="22"/><ellipse cx="66" cy="26" rx="10" ry="22"/><circle cx="50" cy="62" r="30"/></g><circle cx="40" cy="60" r="4.5" fill="#1D3B2A"/><circle cx="60" cy="60" r="4.5" fill="#1D3B2A"/><path d="M46 70q4 3 8 0" stroke="#1D3B2A" stroke-width="3" fill="none" stroke-linecap="round"/>')
+};
+const BELL_ART = S('<path '+O+' fill="#FFE066" d="M24 70V46a26 26 0 0 1 52 0v24l8 8H16z"/><circle cx="50" cy="88" r="8" fill="#FFE066" stroke="#fff" stroke-width="5"/><circle cx="41" cy="52" r="4" fill="#5A4300"/><circle cx="59" cy="52" r="4" fill="#5A4300"/><path d="M43 62q7 5 14 0" stroke="#5A4300" stroke-width="3.5" fill="none" stroke-linecap="round"/>');
+const COVER_COLORS = ["#8BE3AE","#39F58A","#B5D9B0","#1F5C3D","#BFE9E0","#FFB3D1","#CDB8FF","#FFF1C9","#2A2A2E"];
+const PATTERNS = ["xadrez","bolinhas","listras","coracoes","estrelas","liso"];
+const BANDS = ["#39F58A","#FF9EC7","#FFFFFF","#CDB8FF","#FFE066","#1D3B2A"];
+const RINGS = { prata:"linear-gradient(#F4FFF8,#A9C9B6)", dourado:"linear-gradient(#FFF3C4,#D9A93A)", neon:"linear-gradient(#C9FFE0,#2BD872)", rosa:"linear-gradient(#FFE6F1,#F27FAE)" };
+const PAGES = { auto:null, menta:"#EFFFF4", branco:"#FFFFFF", rosinha:"#FFF0F6", lilas:"#F4EEFF", creme:"#FFF9EA" };
+const defaultCover = () => ({ title:"Meu binder", color:"#8BE3AE", pattern:"xadrez", band:"#39F58A", ring:"prata", page:"auto", stickers:[] });
+const defaultProfile = () => ({ nick:"", bio:"", username:"", avatar:"sapo", photo:null, theme:"auto", accent:"verde", accentColor:"#39F58A", contact:"", net:"Instagram", tutorialDone:false });
+
+/* ---------- estado ---------- */
+let uid = null, unsubs = [], auth_email = "", profileLoaded = false;
+let pcs = [], allPcs = [], wishes = [], cover = defaultCover(), profile = defaultProfile();
+let binderDocs = [], legacyCover = null, binders = [], curBinder = "main", nbColor = "#8BE3AE", tourOn = false, tourIdx = 0, tourChecked = false;
+let page = 0, query = "", loaded = false, tab = "binder";
+let isOpen = false, decorating = false, selected = -1, dragging = false;
+let editing = null, draftImg = null, draftSlot = null, draftCode = "", viewing = null, rawSrc = null, rotation = 0, fromWish = null;
+let tradeFilter = "all", wishFilter = "hunt", wEditing = null, wImg = null, wPrio = 2;
+let posts = [], muralFilter = "all", muralQuery = "", annPc = null, postsReady = false;
+
+/* ---------- utilidades ---------- */
+const norm = s => (s||"").toString().normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
+const uidGen = p => p + Date.now().toString(36) + Math.random().toString(36).slice(2,6);
+const money = v => Number(v).toLocaleString("pt-BR", {style:"currency", currency:"BRL"});
+const nextCode = () => "PC-" + String(allPcs.reduce((m,p) => Math.max(m, parseInt((p.code||"").replace(/\D/g,""),10) || 0), 0) + 1).padStart(4,"0");
+const binderOf = p => p.binderId || "main";
+function firstFreeSlot(bid){ bid = bid || curBinder; const u = new Set(allPcs.filter(p => binderOf(p) === bid).map(p => p.slot)); let i = 0; while(u.has(i)) i++; return i; }
+const matches = p => !query || norm([p.name,p.member,p.group,p.source,p.code,p.kind,p.status].join(" ")).includes(query);
+function toast(msg){ const t = $("toast"); t.textContent = msg; t.classList.add("on"); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove("on"), 2300); }
+const el = (tag, cls, txt) => { const e = document.createElement(tag); if(cls) e.className = cls; if(txt != null) e.textContent = txt; return e; };
+function burst(target){
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches || !target) return;
+  const r = target.getBoundingClientRect(), keys = ["brilho","coracao","estrela"];
+  for(let i = 0; i < 12; i++){
+    const s = el("span","spark"); s.innerHTML = STICKERS[keys[i%3]];
+    const a = Math.PI*2*i/12, d = 50 + Math.random()*40;
+    s.style.left = (r.left + r.width/2 - 9) + "px"; s.style.top = (r.top + r.height/2 - 9) + "px";
+    s.style.setProperty("--dx", Math.cos(a)*d + "px"); s.style.setProperty("--dy", Math.sin(a)*d + "px");
+    document.body.append(s); setTimeout(() => s.remove(), 900);
+  }
+}
+function processImage(src, rotate){
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      const W = 520, H = Math.round(520*85/55), c = document.createElement("canvas"); c.width = W; c.height = H;
+      const ctx = c.getContext("2d"); ctx.fillStyle = "#fff"; ctx.fillRect(0,0,W,H);
+      const turned = rotate % 180 !== 0, iw = turned ? img.height : img.width, ih = turned ? img.width : img.height;
+      const sc = Math.max(W/iw, H/ih);
+      ctx.translate(W/2, H/2); ctx.rotate(rotate*Math.PI/180);
+      ctx.drawImage(img, -img.width*sc/2, -img.height*sc/2, img.width*sc, img.height*sc);
+      resolve(c.toDataURL("image/jpeg", .8));
+    };
+    img.onerror = () => reject(new Error("Não foi possível abrir essa imagem."));
+    img.src = src;
+  });
+}
+function sinceTxt(d){
+  const days = Math.floor((Date.now() - d.getTime()) / 864e5);
+  if(days < 1) return "hoje"; if(days < 31) return "há " + days + (days === 1 ? " dia" : " dias");
+  const m = Math.floor(days / 30.4); if(m < 12) return "há " + m + (m === 1 ? " mês" : " meses");
+  const y = Math.floor(m / 12); return "há " + y + (y === 1 ? " ano" : " anos");
+}
+const readFile = f => new Promise(r => { const fr = new FileReader(); fr.onload = () => r(fr.result); fr.readAsDataURL(f); });
+function pcEl(p){
+  const frag = document.createDocumentFragment();
+  const box = el("div","pc"); const im = el("img"); im.src = p.img; im.alt = p.name || p.code; box.append(im); frag.append(box);
+  if(p.protect === "deco") ["a","b"].forEach((c,i) => { const d = el("span","dc " + c); d.innerHTML = STICKERS[i ? "coracao" : "brilho"]; frag.append(d); });
+  return frag;
+}
+document.querySelectorAll("[data-st]").forEach(n => n.innerHTML = STICKERS[n.dataset.st]);
+
+/* ---------- editor de foto ---------- */
+const ED = { img:null, rot:0, flip:false, zoom:1, ox:0, oy:0, aspect:1, outW:400, resolve:null, vw:0, vh:0 };
+function loadImg(src){ return new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = () => rej(new Error("Não foi possível abrir essa imagem.")); i.src = src; }); }
+function edGeom(W, H){
+  const turned = ED.rot % 180 !== 0, iw = turned ? ED.img.height : ED.img.width, ih = turned ? ED.img.width : ED.img.height;
+  const sc = Math.max(W/iw, H/ih) * ED.zoom;
+  const maxX = Math.max(0, (iw*sc - W) / 2), maxY = Math.max(0, (ih*sc - H) / 2);
+  return { sc, maxX, maxY };
+}
+function edDraw(ctx, W, H, k){
+  const g = edGeom(W, H);
+  ED.ox = Math.min(g.maxX/k, Math.max(-g.maxX/k, ED.ox)); ED.oy = Math.min(g.maxY/k, Math.max(-g.maxY/k, ED.oy));
+  ctx.save(); ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, W, H);
+  ctx.translate(W/2 + ED.ox*k, H/2 + ED.oy*k); ctx.rotate(ED.rot*Math.PI/180); if(ED.flip) ctx.scale(-1, 1);
+  ctx.drawImage(ED.img, -ED.img.width*g.sc/2, -ED.img.height*g.sc/2, ED.img.width*g.sc, ED.img.height*g.sc);
+  ctx.restore();
+}
+function edRender(){
+  const c = $("edCanvas"), dpr = Math.min(2, devicePixelRatio || 1);
+  c.width = Math.round(ED.vw*dpr); c.height = Math.round(ED.vh*dpr);
+  edDraw(c.getContext("2d"), c.width, c.height, dpr);
+}
+function editPhoto(src, aspect, outW, round){
+  return new Promise(async resolve => {
+    try{ ED.img = await loadImg(src); }catch(e){ toast(e.message); resolve(null); return; }
+    Object.assign(ED, { rot:0, flip:false, zoom:1, ox:0, oy:0, aspect, outW, resolve });
+    const maxW = Math.min(300, innerWidth - 80), maxH = Math.min(380, innerHeight * .45);
+    let w = maxW, hh = w / aspect; if(hh > maxH){ hh = maxH; w = hh * aspect; }
+    ED.vw = Math.round(w); ED.vh = Math.round(hh);
+    const st = $("edStage"); st.style.width = ED.vw + "px"; st.style.height = ED.vh + "px"; st.classList.toggle("round", !!round);
+    $("edZoom").value = 1;
+    $("edDlg").showModal(); edRender();
+  });
+}
+(() => {
+  const st = $("edStage"), pts = new Map(); let last = null, pinch = null;
+  st.onpointerdown = e => { st.setPointerCapture(e.pointerId); pts.set(e.pointerId, {x:e.clientX, y:e.clientY}); last = {x:e.clientX, y:e.clientY};
+    if(pts.size === 2){ const [a,b] = [...pts.values()]; pinch = { d: Math.hypot(a.x-b.x, a.y-b.y), z: ED.zoom }; } };
+  st.onpointermove = e => {
+    if(!pts.has(e.pointerId)) return; pts.set(e.pointerId, {x:e.clientX, y:e.clientY});
+    if(pts.size === 2 && pinch){ const [a,b] = [...pts.values()]; ED.zoom = Math.min(4, Math.max(1, pinch.z * Math.hypot(a.x-b.x, a.y-b.y) / pinch.d)); $("edZoom").value = ED.zoom; edRender(); return; }
+    if(last){ ED.ox += e.clientX - last.x; ED.oy += e.clientY - last.y; last = {x:e.clientX, y:e.clientY}; edRender(); }
+  };
+  st.onpointerup = st.onpointercancel = e => { pts.delete(e.pointerId); pinch = null; last = pts.size ? [...pts.values()][0] : null; };
+  st.onwheel = e => { e.preventDefault(); ED.zoom = Math.min(4, Math.max(1, ED.zoom - e.deltaY * .002)); $("edZoom").value = ED.zoom; edRender(); };
+})();
+$("edZoom").oninput = e => { ED.zoom = Number(e.target.value); edRender(); };
+$("edRotL").onclick = () => { ED.rot = (ED.rot + 270) % 360; ED.ox = ED.oy = 0; edRender(); };
+$("edRotR").onclick = () => { ED.rot = (ED.rot + 90) % 360; ED.ox = ED.oy = 0; edRender(); };
+$("edFlip").onclick = () => { ED.flip = !ED.flip; edRender(); };
+$("edReset").onclick = () => { Object.assign(ED, {rot:0, flip:false, zoom:1, ox:0, oy:0}); $("edZoom").value = 1; edRender(); };
+function edFinish(ok){
+  const r = ED.resolve; ED.resolve = null; $("edDlg").close();
+  if(!r) return;
+  if(!ok){ r(null); return; }
+  const W = ED.outW, H = Math.round(W / ED.aspect), c = document.createElement("canvas"); c.width = W; c.height = H;
+  edDraw(c.getContext("2d"), W, H, W / ED.vw);
+  r(c.toDataURL("image/jpeg", .82));
+}
+$("edOk").onclick = () => edFinish(true);
+$("edCancel").onclick = () => edFinish(false);
+$("edDlg").addEventListener("cancel", e => { e.preventDefault(); edFinish(false); });
+const PC_ASPECT = 55/85;
+
+/* ---------- salvar ---------- */
+const fail = () => { $("modeNote").hidden = false; $("modeNote").textContent = "Não deu para carregar seus dados. Confira a internet e recarregue a página."; };
+let coverTimer = null, profTimer = null;
+function coverData(){ const b = binders.find(x => x.id === curBinder) || {}; const {id, ...rest} = JSON.parse(JSON.stringify(cover)); rest.order = b.order || 0; return rest; }
+function saveCover(now){ clearTimeout(coverTimer); const bid = curBinder, data = coverData(); const go = () => uid && FB.put(uid, "binders", bid, data).catch(fail); now ? go() : (coverTimer = setTimeout(go, 450)); }
+function saveProfile(){ clearTimeout(profTimer); profTimer = setTimeout(() => { if(!uid) return; FB.putDoc(uid, "profile", Object.assign({}, profile)).catch(fail); syncMyPosts(); savePublic(); }, 500); }
+function syncMyPosts(){
+  posts.filter(p => p.uid === uid && ((p.photo || null) !== (profile.photo || null) || p.avatar !== profile.avatar || (p.username || "") !== (profile.username || "")))
+    .forEach(p => FB.patchPost(p.id, { photo: profile.photo || null, avatar: profile.avatar || "sapo", username: profile.username || "" }).catch(() => {}));
+}
+let pubTimer = null;
+function publicData(){ return { uid, username: profile.username || "", nick: profile.nick || "", bio: profile.bio || "", photo: profile.photo || null,
+  avatar: profile.avatar || "sapo", contact: profile.contact || "", net: profile.net || "Instagram", updatedAt: Date.now() }; }
+function savePublic(){ clearTimeout(pubTimer); pubTimer = setTimeout(() => { if(uid && profile.username) FB.putProfile(uid, publicData()).catch(() => {}); }, 600); }
+
+/* ---------- abas ---------- */
+function showTab(t){
+  tab = t;
+  document.querySelectorAll(".tabs button").forEach(b => b.setAttribute("aria-selected", String(b.dataset.tab === t)));
+  ["binder","trade","mural","wish","me","user"].forEach(k => $("v-" + k).hidden = k !== t);
+  if(t !== "binder" && decorating) finishDeco(false);
+  renderAll();
+  window.scrollTo({top:0});
+}
+document.querySelectorAll(".tabs button").forEach(b => b.onclick = () => showTab(b.dataset.tab));
+$("topAvatar").onclick = () => showTab("me");
+function renderAll(){
+  if(tab === "binder") renderBinder();
+  if(tab === "trade") renderTrade();
+  if(tab === "mural") renderMural();
+  if(tab === "wish") renderWish();
+  if(tab === "me") renderMe();
+  paintAvatar($("topAvatar"), profile);
+}
+function paintAvatar(node, who){
+  node.textContent = "";
+  if(who && who.photo){ const im = el("img","avimg"); im.src = who.photo; im.alt = ""; node.append(im); node.classList.add("photo"); }
+  else { node.innerHTML = STICKERS[(who && who.avatar) || "sapo"] || STICKERS.sapo; node.classList.remove("photo"); }
+}
+
+/* ---------- binder ---------- */
+function renderBinder(){
+  renderBinderBar();
+  const total = pcs.length, trade = pcs.filter(p => p.status === "Para troca").length;
+  const members = new Set(pcs.map(p => norm(p.member)).filter(Boolean)).size;
+  $("countNote").textContent = !loaded ? "Carregando…" : total === 0 ? "Seu binder ainda está vazio" : total === 1 ? "1 photocard guardado" : total + " photocards guardados";
+  const pills = $("pills"); pills.textContent = "";
+  [[total, total === 1 ? "PC" : "PCs"],[trade,"pra troca"],[members, members === 1 ? "membro" : "membros"]].forEach(([n,l]) => {
+    const s = el("span","pill"); const b = el("b", null, n); s.append(b, " " + l); pills.append(s);
+  });
+  const maxSlot = pcs.reduce((m,p) => Math.max(m, p.slot ?? 0), -1);
+  const pages = Math.max(1, Math.ceil((maxSlot + 2) / PER));
+  if(page > pages - 1) page = pages - 1;
+  const bySlot = new Map(pcs.map(p => [p.slot, p]));
+  const sheet = $("sheet");
+  sheet.querySelectorAll(".pocket").forEach(n => n.remove());
+  for(let i = 0; i < PER; i++){
+    const slot = page*PER + i, p = bySlot.get(slot);
+    const b = el("button","pocket"); b.type = "button"; b.dataset.slot = slot;
+    b.append(el("span","num", slot + 1));
+    if(!isOpen) b.tabIndex = -1;
+    if(p){
+      b.append(pcEl(p));
+      if(p.protect === "top") b.classList.add("top-l");
+      if(p.protect === "double") b.classList.add("dbl-l");
+      if(p.protect === "deco") b.classList.add("deco-l");
+      b.append(el("span","tag", p.name || p.code));
+      if(p.status === "Para troca") b.append(el("span","flag troca","troca"));
+      if(p.status === "Para venda") b.append(el("span","flag venda","venda"));
+      if(!matches(p)) b.classList.add("dim");
+      b.setAttribute("aria-label", "Lugar " + (slot + 1) + ": " + (p.name || "Photocard") + ", " + p.code + ". Segure para mudar de lugar");
+      attachHold(b, p);
+      b.onclick = () => { if(b._held){ b._held = false; return; } openView(p); };
+    }else{
+      b.classList.add("empty"); b.append(el("span", null, "+"));
+      b.setAttribute("aria-label", "Lugar " + (slot + 1) + " vazio, adicionar photocard aqui");
+      b.disabled = !loaded;
+      b.onclick = () => openEdit(null, slot);
+    }
+    sheet.insertBefore(b, $("pagetag"));
+  }
+  $("pagetag").textContent = "pág. " + (page+1);
+  $("pageLabel").textContent = (page+1) + " de " + pages;
+  $("prev").disabled = page === 0;
+  $("next").disabled = page >= pages - 1;
+  $("addBtn").disabled = !loaded;
+}
+function turn(dir){
+  const s = $("sheet");
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches){ page += dir; renderBinder(); return; }
+  const out = dir > 0 ? "out-next" : "out-prev", inn = dir > 0 ? "in-next" : "in-prev";
+  s.classList.remove("in-next","in-prev"); s.classList.add(out);
+  setTimeout(() => { page += dir; renderBinder(); s.classList.remove(out); void s.offsetWidth; s.classList.add(inn); }, 220);
+}
+$("prev").onclick = () => turn(-1);
+$("next").onclick = () => turn(1);
+$("search").oninput = e => {
+  query = norm(e.target.value.trim());
+  const hit = query && pcs.filter(matches).sort((a,b) => a.slot - b.slot)[0];
+  if(hit) page = Math.floor(hit.slot / PER);
+  renderBinder();
+};
+function setOpen(v){
+  isOpen = v;
+  $("book").classList.toggle("open", v);
+  $("openBar").hidden = !v; $("pager").hidden = !v; $("closedBar").hidden = v || decorating;
+  $("cover").tabIndex = v ? -1 : 0;
+  renderBinder();
+}
+const openBinder = () => { if(!decorating) setOpen(true); };
+$("cover").onclick = () => openBinder();
+$("cover").onkeydown = e => { if(!decorating && (e.key === "Enter" || e.key === " ")){ e.preventDefault(); openBinder(); } };
+$("openBtn").onclick = openBinder;
+$("closeBtn").onclick = () => { setOpen(false); window.scrollTo({top:0, behavior:"smooth"}); };
+
+/* ---------- capa ---------- */
+function fixCover(c){
+  c = Object.assign(defaultCover(), c || {});
+  if(c.pattern === "neon"){ c.pattern = "bolinhas"; c.color = "#1F5C3D"; }
+  if(!PATTERNS.includes(c.pattern)) c.pattern = "liso";
+  if(!RINGS[c.ring]) c.ring = "prata";
+  if(!(c.page in PAGES)) c.page = "auto";
+  c.stickers = Array.isArray(c.stickers) ? c.stickers : [];
+  return c;
+}
+function renderCover(){
+  const book = $("book"), c = $("cover");
+  book.style.setProperty("--cc", cover.color);
+  book.style.setProperty("--band", cover.band);
+  book.style.setProperty("--ringbg", RINGS[cover.ring]);
+  const pg = PAGES[cover.page];
+  if(pg) book.style.setProperty("--sheet", pg); else book.style.removeProperty("--sheet");
+  $("sheet").classList.toggle("custom", !!pg);
+  c.className = "cover p-" + cover.pattern + (decorating ? " decorating" : "");
+  $("coverTitle").textContent = cover.title || "Meu binder";
+  const box = $("stickers"); box.textContent = "";
+  cover.stickers.forEach((st, i) => {
+    const n = el("div", "stk" + (st.k === "txt" ? " txt" : "") + (decorating && i === selected ? " sel" : ""));
+    if(st.k === "txt") n.textContent = st.t; else if(st.k === "foto") n.innerHTML = photoSticker(st, i); else n.innerHTML = STICKERS[st.k] || "";
+    n.style.left = st.x + "%"; n.style.top = st.y + "%";
+    n.style.width = st.k === "txt" ? "auto" : ((st.k === "foto" ? 24 : 17) * (st.s || 1)) + "%";
+    n.style.transform = "translate(-50%,-50%) rotate(" + (st.r || 0) + "deg)" + (st.k === "txt" ? " scale(" + (st.s || 1) + ")" : "");
+    if(decorating) attachDrag(n, st, i);
+    box.append(n);
+  });
+  $("selTools").hidden = !(decorating && selected >= 0 && cover.stickers[selected]);
+}
+function attachDrag(n, st, i){
+  n.onpointerdown = e => {
+    e.preventDefault(); e.stopPropagation();
+    selected = i; dragging = true;
+    document.querySelectorAll(".stk.sel").forEach(x => x.classList.remove("sel")); n.classList.add("sel");
+    $("selTools").hidden = false;
+    n.setPointerCapture(e.pointerId);
+    const rect = $("cover").getBoundingClientRect();
+    n.onpointermove = ev => {
+      st.x = Math.min(97, Math.max(3, (ev.clientX - rect.left) / rect.width * 100));
+      st.y = Math.min(97, Math.max(3, (ev.clientY - rect.top) / rect.height * 100));
+      n.style.left = st.x + "%"; n.style.top = st.y + "%";
+    };
+    n.onpointerup = n.onpointercancel = () => { n.onpointermove = null; dragging = false; saveCover(); };
+  };
+}
+const FRAME_SHAPES = {
+  circulo: '<circle cx="50" cy="50" r="44"/>',
+  coracao: '<path d="M50 90C19 68 7 51 7 33 7 18 18 8 32 8c8 0 14 4 18 11 4-7 10-11 18-11 14 0 25 10 25 25 0 18-12 35-43 57z"/>',
+  quadrado: '<rect x="7" y="7" width="86" height="86" rx="12"/>',
+  estrela: '<polygon points="50,4 62,35 95,37 69,58 79,93 50,74 21,93 31,58 5,37 38,35"/>'
+};
+const FRAME_NAMES = { circulo:"Redonda", coracao:"Coração", quadrado:"Quadrada", estrela:"Estrela" };
+let clipSeq = 0;
+function photoSticker(st){
+  const shape = FRAME_SHAPES[st.shape] || FRAME_SHAPES.circulo, id = "clp" + (++clipSeq);
+  const safe = String(st.img || "").replace(/"/g, "");
+  return '<svg class="st" viewBox="0 0 100 100" aria-hidden="true"><defs><clipPath id="' + id + '">' + shape + '</clipPath></defs>' +
+    '<g fill="#fff" stroke="#fff" stroke-width="9" stroke-linejoin="round">' + shape + '</g>' +
+    '<image href="' + safe + '" x="0" y="0" width="100" height="100" preserveAspectRatio="xMidYMid slice" clip-path="url(#' + id + ')"/></svg>';
+}
+let pendingShape = "circulo";
+function buildFrames(){
+  const box = $("frames"); box.textContent = "";
+  Object.keys(FRAME_SHAPES).forEach(k => {
+    const b = el("button"); b.type = "button";
+    b.innerHTML = '<svg viewBox="0 0 100 100" aria-hidden="true"><g fill="var(--mint)" stroke="var(--neon)" stroke-width="7" stroke-linejoin="round">' + FRAME_SHAPES[k] + '</g></svg>';
+    b.append(document.createTextNode(FRAME_NAMES[k]));
+    b.onclick = () => {
+      if(cover.stickers.filter(s => s.k === "foto").length >= 8){ toast("Cada binder pode ter até 8 adesivos com foto."); return; }
+      pendingShape = k; $("frameInput").click();
+    };
+    box.append(b);
+  });
+}
+$("frameInput").onchange = async e => {
+  const f = e.target.files[0]; e.target.value = ""; if(!f) return;
+  const out = await editPhoto(await readFile(f), 1, 220, pendingShape === "circulo");
+  if(!out) return;
+  cover.stickers.push({ k:"foto", shape: pendingShape, img: out, x: 30 + Math.random()*40, y: 55 + Math.random()*25, r: Math.round(Math.random()*16 - 8), s: 1 });
+  selected = cover.stickers.length - 1; renderCover(); saveCover(); toast("Foto colada na capa!");
+};
+function addSticker(k, t){
+  if(cover.stickers.length >= 40){ toast("A capa já está cheia de adesivos!"); return; }
+  cover.stickers.push({ k, t: t || "", x: 25 + Math.random()*50, y: 50 + Math.random()*35, r: Math.round(Math.random()*30 - 15), s: 1 });
+  selected = cover.stickers.length - 1; renderCover(); saveCover();
+}
+function swatches(boxId, items, current, apply){
+  const box = $(boxId); box.textContent = "";
+  items.forEach(it => {
+    const b = el("button"); b.type = "button";
+    b.setAttribute("aria-label", it.label); b.setAttribute("aria-pressed", String(it.value === current));
+    if(it.cls) b.className = it.cls;
+    Object.assign(b.style, it.style || {});
+    b.onclick = () => { apply(it.value); renderCover(); buildPanel(); saveCover(); };
+    box.append(b);
+  });
+}
+function buildPanel(){
+  $("titleIn").value = cover.title || "";
+  swatches("swCover", COVER_COLORS.map(c => ({value:c, label:"Capa " + c, style:{backgroundColor:c}})), cover.color, v => cover.color = v);
+  swatches("swPattern", PATTERNS.map(p => ({value:p, label:"Estampa " + p, cls:"p-" + p, style:{backgroundColor:cover.color}})), cover.pattern, v => cover.pattern = v);
+  swatches("swBand", BANDS.map(c => ({value:c, label:"Elástico " + c, style:{backgroundColor:c}})), cover.band, v => cover.band = v);
+  swatches("swRing", Object.keys(RINGS).map(k => ({value:k, label:"Argolas " + k, style:{backgroundImage:RINGS[k]}})), cover.ring, v => cover.ring = v);
+  swatches("swPage", Object.keys(PAGES).map(k => ({value:k, label:k === "auto" ? "Páginas automáticas" : "Páginas " + k,
+    style: PAGES[k] ? {backgroundColor:PAGES[k]} : {backgroundImage:"linear-gradient(135deg,#FBFFFC 50%,#112B1D 50%)"}})), cover.page, v => cover.page = v);
+  const tray = $("tray"); tray.textContent = "";
+  Object.keys(STICKERS).forEach(k => {
+    const b = el("button"); b.type = "button"; b.innerHTML = STICKERS[k];
+    b.setAttribute("aria-label", "Colar adesivo " + k); b.onclick = () => addSticker(k); tray.append(b);
+  });
+  buildFrames();
+}
+$("titleIn").oninput = e => { cover.title = e.target.value.trim() || "Meu binder"; $("coverTitle").textContent = cover.title; saveCover(); };
+$("txtAdd").onclick = () => { const v = $("txtIn").value.trim(); if(!v) return; addSticker("txt", v); $("txtIn").value = ""; };
+const sel = () => cover.stickers[selected];
+$("sRot").onclick = () => { if(!sel()) return; sel().r = ((sel().r || 0) + 20) % 360; renderCover(); saveCover(); };
+$("sBig").onclick = () => { if(!sel()) return; sel().s = Math.min(2.4, (sel().s || 1) + .2); renderCover(); saveCover(); };
+$("sSmall").onclick = () => { if(!sel()) return; sel().s = Math.max(.5, (sel().s || 1) - .2); renderCover(); saveCover(); };
+$("sDel").onclick = () => { if(!sel()) return; cover.stickers.splice(selected, 1); selected = -1; renderCover(); saveCover(); };
+$("decoBtn").onclick = () => {
+  decorating = true; selected = -1; buildPanel(); renderCover();
+  $("panel").hidden = false; $("closedBar").hidden = true;
+  $("cover").setAttribute("aria-label", "Capa do binder em modo personalizar");
+};
+function finishDeco(msg){
+  decorating = false; selected = -1; renderCover();
+  $("panel").hidden = true; $("closedBar").hidden = isOpen;
+  $("cover").setAttribute("aria-label", "Abrir binder");
+  saveCover(true);
+  if(msg) toast("Binder salvo!");
+}
+$("decoDone").onclick = () => finishDeco(true);
+
+/* ---------- adicionar / editar PC ---------- */
+function setPreview(id, src, emptyTxt){
+  const pv = $(id); pv.textContent = ""; pv.classList.toggle("has", !!src);
+  if(src){ const im = el("img"); im.src = src; im.alt = "Prévia do photocard"; pv.append(im); } else pv.textContent = emptyTxt;
+}
+function syncStatusFields(){
+  $("wantBox").hidden = $("fStatus").value !== "Para troca";
+  $("priceBox").hidden = $("fStatus").value !== "Para venda";
+}
+$("fStatus").onchange = syncStatusFields;
+function openEdit(p, slot, prefill){
+  editing = p; fromWish = prefill ? prefill.wishId : null;
+  draftSlot = p ? p.slot : (slot ?? firstFreeSlot());
+  draftImg = p ? p.img : (prefill && prefill.img) || null; rawSrc = draftImg; rotation = 0;
+  draftCode = p ? p.code : nextCode();
+  const src = p || prefill || {};
+  $("editTitle").textContent = p ? "Editar photocard" : "Novo photocard";
+  $("fName").value = src.name || ""; $("fMember").value = src.member || ""; $("fGroup").value = src.group || "";
+  $("fSource").value = src.source || ""; $("fKind").value = src.kind || "Álbum"; $("fStatus").value = src.status || "Na coleção";
+  $("fWant").value = src.want || ""; $("fPrice").value = src.price ?? "";
+  $("fProtect").value = src.protect || "sleeve"; $("fNote").value = src.note || ""; $("fSleeveDate").value = src.sleeveDate || "";
+  const fb = $("fBinder"); fb.textContent = "";
+  binders.forEach(b => { const o = el("option", null, b.title || "Meu binder"); o.value = b.id; fb.append(o); });
+  fb.value = p ? binderOf(p) : curBinder;
+  const cs = $("codeShow"); cs.textContent = ""; cs.append(el("span","code", draftCode));
+  $("editErr").textContent = ""; setPreview("preview", draftImg, "Sem foto ainda"); $("rotBtn").disabled = !rawSrc;
+  syncStatusFields();
+  $("editDlg").showModal();
+}
+async function takeFile(file){
+  if(!file) return; $("editErr").textContent = "";
+  rawSrc = await readFile(file); rotation = 0;
+  const out = await editPhoto(rawSrc, PC_ASPECT, 520);
+  if(out){ draftImg = out; setPreview("preview", draftImg); $("rotBtn").disabled = false; }
+}
+$("camBtn").onclick = () => $("camInput").click();
+$("galBtn").onclick = () => $("galInput").click();
+$("camInput").onchange = e => { takeFile(e.target.files[0]); e.target.value = ""; };
+$("galInput").onchange = e => { takeFile(e.target.files[0]); e.target.value = ""; };
+$("rotBtn").onclick = async () => { const out = await editPhoto(rawSrc || draftImg, PC_ASPECT, 520); if(out){ draftImg = out; setPreview("preview", draftImg); } };
+$("cancelEdit").onclick = () => $("editDlg").close();
+$("addBtn").onclick = () => openEdit(null);
+$("editForm").onsubmit = async e => {
+  e.preventDefault();
+  if(!draftImg){ $("editErr").textContent = "Escaneie ou escolha a foto do photocard primeiro."; return; }
+  const status = $("fStatus").value, priceRaw = $("fPrice").value;
+  const pc = {
+    code: draftCode, name: $("fName").value.trim(), member: $("fMember").value.trim(), group: $("fGroup").value.trim(),
+    source: $("fSource").value.trim(), kind: $("fKind").value, status, protect: $("fProtect").value, sleeveDate: $("fSleeveDate").value || "",
+    want: status === "Para troca" ? $("fWant").value.trim() : "",
+    price: status === "Para venda" && priceRaw !== "" ? Math.max(0, Number(priceRaw)) : null,
+    note: $("fNote").value.trim(), img: draftImg, slot: draftSlot, createdAt: editing ? editing.createdAt : new Date().toISOString(),
+    binderId: $("fBinder").value || curBinder
+  };
+  const prevBinder = editing ? binderOf(editing) : (draftSlot != null ? curBinder : null);
+  if(pc.binderId !== prevBinder) pc.slot = firstFreeSlot(pc.binderId);
+  const moved = editing && pc.binderId !== binderOf(editing);
+  const id = editing ? editing.id : uidGen("pc"), wasNew = !editing, wishId = fromWish;
+  $("saveBtn").disabled = true;
+  try{
+    await FB.put(uid, "pcs", id, pc);
+    if(wishId) await FB.del(uid, "wishlist", wishId).catch(() => {});
+    $("editDlg").close();
+    if(pc.binderId !== curBinder){ switchBinder(pc.binderId, true); }
+    page = Math.floor(pc.slot / PER);
+    if(wishId){ showTab("binder"); setOpen(true); }
+    renderAll();
+    toast(moved ? "PC mudou para o binder " + ((binders.find(b => b.id === pc.binderId) || {}).title || "") + "!" : wishId ? "Saiu da lista de desejos e foi pro binder!" : wasNew ? "Guardado na página " + (page+1) + ", bolso " + (pc.slot % PER + 1) + "!" : "PC atualizado!");
+    if(wasNew && tab === "binder") setTimeout(() => burst(document.querySelector('.pocket[data-slot="' + pc.slot + '"]')), 80);
+  }catch(err){
+    $("editErr").textContent = "Não deu para guardar. Confira a internet e tente de novo.";
+  }finally{ $("saveBtn").disabled = false; }
+};
+
+/* ---------- mudar de lugar ---------- */
+let moving = null;
+function attachHold(b, p){
+  let timer = null, sx = 0, sy = 0;
+  const cancel = () => { clearTimeout(timer); timer = null; b.classList.remove("holding"); };
+  b.addEventListener("contextmenu", e => e.preventDefault());
+  b.addEventListener("pointerdown", e => {
+    if(e.button && e.button !== 0) return;
+    sx = e.clientX; sy = e.clientY; b._held = false; b.classList.add("holding");
+    timer = setTimeout(() => { timer = null; b._held = true; b.classList.remove("holding"); try{ navigator.vibrate && navigator.vibrate(30); }catch(_){} openMove(p); }, 500);
+  });
+  b.addEventListener("pointermove", e => { if(timer && Math.hypot(e.clientX - sx, e.clientY - sy) > 10) cancel(); });
+  ["pointerup","pointercancel","pointerleave"].forEach(ev => b.addEventListener(ev, () => { if(timer) cancel(); }));
+}
+function openMove(p){
+  moving = p;
+  $("moveImg").src = p.img; $("moveName").textContent = p.name || p.member || p.code;
+  $("moveNow").textContent = "Está no lugar " + (p.slot + 1) + " (página " + (Math.floor(p.slot / PER) + 1) + ")";
+  $("moveTo").value = ""; $("moveErr").textContent = ""; $("moveHint").textContent = "Se já tiver um PC nesse lugar, os dois trocam de lugar.";
+  $("moveDlg").showModal();
+  setTimeout(() => $("moveTo").focus(), 50);
+}
+$("moveBtn").onclick = () => { const p = viewing; $("viewDlg").close(); openMove(p); };
+$("moveCancel").onclick = () => $("moveDlg").close();
+$("moveTo").oninput = () => {
+  const n = parseInt($("moveTo").value, 10), other = moving && pcs.find(x => x.slot === n - 1 && x.id !== moving.id);
+  $("moveHint").textContent = !n ? "Se já tiver um PC nesse lugar, os dois trocam de lugar."
+    : other ? "O lugar " + n + " tem " + (other.name || other.member || other.code) + ". Eles vão trocar de lugar."
+    : "O lugar " + n + " (página " + (Math.floor((n - 1) / PER) + 1) + ") está vazio.";
+};
+$("moveForm").onsubmit = async e => {
+  e.preventDefault();
+  const n = parseInt($("moveTo").value, 10);
+  if(!n || n < 1 || n > 999){ $("moveErr").textContent = "Digite um número de 1 a 999."; return; }
+  const to = n - 1, from = moving.slot;
+  if(to === from){ $("moveDlg").close(); return; }
+  const other = pcs.find(x => x.slot === to && x.id !== moving.id);
+  $("moveOk").disabled = true;
+  try{
+    const a = Object.assign({}, moving); delete a.id; a.slot = to;
+    await FB.put(uid, "pcs", moving.id, a);
+    if(other){ const o = Object.assign({}, other); delete o.id; o.slot = from; await FB.put(uid, "pcs", other.id, o); }
+    $("moveDlg").close();
+    page = Math.floor(to / PER); renderBinder();
+    toast(other ? "Trocou de lugar com " + (other.name || other.member || other.code) + "!" : "Foi para o lugar " + n + "!");
+    setTimeout(() => { const t = document.querySelector('.pocket[data-slot="' + to + '"]'); if(t){ t.classList.add("moved"); burst(t); } }, 80);
+  }catch(err){ $("moveErr").textContent = "Não deu para mudar. Tente de novo."; }
+  finally{ $("moveOk").disabled = false; }
+};
+
+/* ---------- ver PC ---------- */
+function openView(p){
+  viewing = p; $("viewErr").textContent = "";
+  const box = $("vImg"); box.textContent = ""; box.className = "big" + (p.protect === "deco" ? " deco-l" : ""); box.append(pcEl(p));
+  $("vName").textContent = p.name || "Photocard sem nome";
+  const prot = {none:"Sem proteção", sleeve:"Sleeve", double:"Double sleeve", top:"Toploader", deco:"Toploader decorado"}[p.protect || "sleeve"];
+  const sd = p.sleeveDate ? new Date(p.sleeveDate + "T12:00:00") : null;
+  const sleeveTxt = sd ? sd.toLocaleDateString("pt-BR") + " (" + sinceTxt(sd) + ")" : "";
+  const rows = [["Código",p.code],["Membro",p.member],["Grupo",p.group],["De onde é",p.source],["Tipo",p.kind],["Situação",p.status],
+    ["Procuro",p.status === "Para troca" ? p.want : ""],["Preço",p.status === "Para venda" && p.price != null ? money(p.price) : ""],
+    ["Proteção",prot],["Sleeve colocada/trocada",sleeveTxt],["Lugar","Página " + (Math.floor(p.slot/PER)+1) + ", bolso " + (p.slot%PER+1)],["Observação",p.note]];
+  const dl = $("vList"); dl.textContent = "";
+  rows.filter(r => r[1]).forEach(([k,v]) => dl.append(el("dt", null, k), el("dd", null, v)));
+  $("annBtn").hidden = !(p.status === "Para troca" || p.status === "Para venda");
+  $("viewDlg").showModal();
+}
+$("annBtn").onclick = () => { $("viewDlg").close(); openAnn(viewing); };
+$("closeView").onclick = () => $("viewDlg").close();
+$("editBtn").onclick = () => { $("viewDlg").close(); openEdit(viewing); };
+$("delBtn").onclick = async () => {
+  if(!confirm("Excluir " + (viewing.name || viewing.code) + " do binder?")) return;
+  try{ await FB.del(uid, "pcs", viewing.id); $("viewDlg").close(); toast("PC excluído"); } catch(e){ $("viewErr").textContent = "Não deu para excluir. Tente de novo."; }
+};
+
+/* ---------- trocas ---------- */
+document.querySelectorAll("#tradeSeg button").forEach(b => b.onclick = () => {
+  tradeFilter = b.dataset.f;
+  document.querySelectorAll("#tradeSeg button").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+  renderTrade();
+});
+const tradeList = () => allPcs.filter(p => (p.status === "Para troca" || p.status === "Para venda") && (tradeFilter === "all" || p.status === tradeFilter))
+  .sort((a,b) => (a.member||"").localeCompare(b.member||"") || a.slot - b.slot);
+function renderTrade(){
+  const list = tradeList(), grid = $("tradeGrid"); grid.textContent = "";
+  $("tradeEmpty").hidden = list.length > 0 || !loaded; $("copyTrade").hidden = list.length === 0;
+  list.forEach(p => {
+    const c = el("button","tcard"); c.type = "button";
+    const ph = el("div","ph"); const im = el("img"); im.src = p.img; im.alt = p.name || p.code; ph.append(im);
+    const isSale = p.status === "Para venda";
+    c.append(ph, el("span", "badge " + (isSale ? "venda" : "troca"), isSale ? (p.price != null ? money(p.price) : "Venda") : "Troca"));
+    c.append(el("div","nm", p.name || p.code), el("div","mm", [p.member, p.group].filter(Boolean).join(" · ") || p.code));
+    if(!isSale && p.want) c.append(el("div","want", "Procuro: " + p.want));
+    c.onclick = () => openView(p);
+    grid.append(c);
+  });
+}
+$("copyTrade").onclick = async () => {
+  const list = tradeList(); if(!list.length) return;
+  const line = p => "• " + [p.member, p.name || p.code].filter(Boolean).join(" – ") + (p.source ? " (" + p.source + ")" : "") +
+    (p.status === "Para venda" ? (p.price != null ? " → " + money(p.price) : " → venda") : (p.want ? " → procuro " + p.want : " → troca"));
+  const t = list.filter(p => p.status === "Para troca"), v = list.filter(p => p.status === "Para venda");
+  let txt = "💚 " + (cover.title || "My dear binder") + "\n";
+  if(t.length) txt += "\n🔁 Troca\n" + t.map(line).join("\n") + "\n";
+  if(v.length) txt += "\n💸 Venda\n" + v.map(line).join("\n") + "\n";
+  try{ await navigator.clipboard.writeText(txt.trim()); toast("Lista copiada! É só colar no post."); }
+  catch(e){ toast("Não deu para copiar neste navegador."); }
+};
+
+/* ---------- mural ---------- */
+const cleanHandle = s => (s || "").trim().replace(/^@+/, "").replace(/\s+/g, "");
+function contactUrl(net, handle){
+  const h = cleanHandle(handle); if(!/^[A-Za-z0-9._]{1,40}$/.test(h)) return null;
+  if(net === "Instagram") return "https://instagram.com/" + h;
+  if(net === "X (Twitter)") return "https://x.com/" + h;
+  if(net === "TikTok") return "https://tiktok.com/@" + h;
+  return null;
+}
+function ago(ms){
+  const s = Math.max(1, Math.round((Date.now() - ms) / 1000));
+  if(s < 60) return "agora há pouco";
+  const m = Math.round(s/60); if(m < 60) return "há " + m + " min";
+  const h = Math.round(m/60); if(h < 24) return "há " + h + (h === 1 ? " hora" : " horas");
+  const d = Math.round(h/24); if(d < 30) return "há " + d + (d === 1 ? " dia" : " dias");
+  return new Date(ms).toLocaleDateString("pt-BR");
+}
+document.querySelectorAll("#muralSeg button").forEach(b => b.onclick = () => {
+  muralFilter = b.dataset.f;
+  document.querySelectorAll("#muralSeg button").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+  renderMural();
+});
+$("muralSearch").oninput = e => { muralQuery = norm(e.target.value.trim()); renderMural(); };
+function renderMural(){
+  let list = posts.filter(p => muralFilter === "mine" ? p.uid === uid : p.status !== "finalizado");
+  if(muralFilter === "troca" || muralFilter === "venda") list = list.filter(p => p.type === muralFilter);
+  if(muralFilter === "following") list = list.filter(p => followingSet.has(p.uid));
+  if(muralQuery) list = list.filter(p => norm([p.name, p.member, p.group, p.source, p.want, p.msg, p.contact, p.username].join(" ")).includes(muralQuery));
+  const feed = $("feed"); feed.textContent = "";
+  $("feedEmpty").hidden = list.length > 0 || !postsReady;
+  $("feedEmptyT").textContent = muralFilter === "mine" ? "Você ainda não anunciou nada" : muralFilter === "following" ? "Nada de quem você segue" : muralQuery ? "Nada encontrado" : "O mural está quietinho";
+  $("feedEmptyS").textContent = muralFilter === "mine" ? "Toque em + Anunciar para postar um PC de troca ou venda." : muralFilter === "following" ? "Siga pessoas pelo perfil delas para ver os anúncios aqui." : muralQuery ? "Tente buscar outro nome." : "Seja a primeira pessoa a anunciar um PC!";
+  list.forEach(p => feed.append(postCard(p)));
+}
+function postCard(p){
+  const card = el("article", "post" + (p.status === "finalizado" ? " done" : ""));
+  const who = el("div","who"); const av = el("div","av"); paintAvatar(av, p);
+  const name = p.username ? "@" + p.username : "@" + cleanHandle(p.contact);
+  const wt = el("div"); wt.append(el("b", null, name), el("span", null, ago(p.createdAt || Date.now()) + (p.status === "finalizado" ? " · finalizado" : "")));
+  who.append(av, wt); who.setAttribute("role", "button"); who.tabIndex = 0; who.setAttribute("aria-label", "Ver perfil de " + name);
+  who.onclick = () => openUser(p.uid);
+  who.onkeydown = ev => { if(ev.key === "Enter") openUser(p.uid); };
+  const body = el("div","body");
+  const ph = el("div","ph"); if(p.img){ const im = el("img"); im.src = p.img; im.alt = p.name || "Photocard"; ph.append(im); }
+  ph.append(el("span", "badge " + p.type, p.type === "venda" ? "Venda" : "Troca"));
+  const info = el("div","info");
+  info.append(el("b", null, p.name || p.member || "Photocard"), el("div","mm", [p.member, p.group, p.source].filter(Boolean).join(" · ")));
+  if(p.type === "venda" && p.price != null) info.append(el("div","price", money(p.price)));
+  if(p.type === "troca" && p.want) info.append(el("div","want", "Procuro: " + p.want));
+  if(p.msg) info.append(el("p","msg", p.msg));
+  body.append(ph, info);
+  const ct = el("div","contact");
+  const handle = "@" + cleanHandle(p.contact);
+  ct.append(el("div","net", "Chame no " + (p.net && p.net !== "Outra" ? p.net : "contato") + ": " + handle), el("span","sp"));
+  const cp = el("button","btn small","Copiar @"); cp.type = "button";
+  cp.onclick = async () => { try{ await navigator.clipboard.writeText(handle); toast("@ copiado!"); }catch(e){ toast(handle); } };
+  ct.append(cp);
+  const url = contactUrl(p.net, p.contact);
+  if(url){ const a = el("a","btn small primary","Abrir " + (p.net === "X (Twitter)" ? "X" : p.net)); a.href = url; a.target = "_blank"; a.rel = "noopener noreferrer"; a.style.textDecoration = "none"; ct.append(a); }
+  card.append(who, body, ct);
+  if(p.uid === uid){
+    const mine = el("div","mine");
+    const done = el("button","btn small", p.status === "finalizado" ? "Reativar" : "Já troquei/vendi"); done.type = "button";
+    done.onclick = async () => { try{ await FB.patchPost(p.id, {status: p.status === "finalizado" ? "ativo" : "finalizado"}); }catch(e){ toast("Não deu para salvar."); } };
+    const del = el("button","btn small danger","Apagar"); del.type = "button";
+    del.onclick = async () => { if(!confirm("Apagar este anúncio do mural?")) return; try{ await FB.delPost(p.id); toast("Anúncio apagado"); }catch(e){ toast("Não deu para apagar."); } };
+    mine.append(done, del); card.append(mine);
+  }
+  return card;
+}
+$("muralAdd").onclick = () => {
+  const list = allPcs.filter(p => p.status === "Para troca" || p.status === "Para venda").sort((a,b) => a.slot - b.slot);
+  const g = $("pickGrid"); g.textContent = "";
+  $("pickSub").textContent = list.length ? "Aparecem aqui os PCs do seu binder marcados como \"Para troca\" ou \"Para venda\"."
+    : "Você ainda não tem PCs pra troca ou venda. No binder, abra um PC, toque em Editar e mude a situação.";
+  list.forEach(p => {
+    const b = el("button"); b.type = "button"; const im = el("img"); im.src = p.img; im.alt = "";
+    b.append(im, document.createTextNode(p.name || p.member || p.code));
+    b.onclick = () => { $("pickDlg").close(); openAnn(p); };
+    g.append(b);
+  });
+  $("pickDlg").showModal();
+};
+$("pickClose").onclick = () => $("pickDlg").close();
+function syncAnnType(){ const v = $("annType").value === "venda"; $("annPriceBox").hidden = !v; $("annWantBox").hidden = v; }
+$("annType").onchange = syncAnnType;
+function openAnn(p){
+  annPc = p;
+  $("annImg").src = p.img; $("annName").textContent = p.name || p.member || p.code;
+  $("annMeta").textContent = [p.member, p.group, p.source].filter(Boolean).join(" · ");
+  $("annType").value = p.status === "Para venda" ? "venda" : "troca";
+  $("annWant").value = p.want || ""; $("annPrice").value = p.price ?? ""; $("annMsg").value = "";
+  $("annContact").value = profile.contact || ""; $("annNet").value = profile.net || "Instagram";
+  $("annErr").textContent = ""; syncAnnType();
+  $("annDlg").showModal();
+}
+$("annCancel").onclick = () => $("annDlg").close();
+$("annForm").onsubmit = async e => {
+  e.preventDefault();
+  const handle = cleanHandle($("annContact").value);
+  if(!handle){ $("annErr").textContent = "Coloque seu @ para as pessoas falarem com você."; return; }
+  const type = $("annType").value, pr = $("annPrice").value;
+  const data = {
+    uid, avatar: profile.avatar || "sapo", photo: profile.photo || null, username: profile.username || "",
+    contact: handle, net: $("annNet").value, type,
+    price: type === "venda" && pr !== "" ? Math.max(0, Number(pr)) : null,
+    want: type === "troca" ? $("annWant").value.trim() : "",
+    msg: $("annMsg").value.trim(), name: annPc.name || "", member: annPc.member || "", group: annPc.group || "", source: annPc.source || "",
+    img: annPc.img, pcId: annPc.id, status: "ativo", createdAt: Date.now()
+  };
+  $("annSave").disabled = true;
+  try{
+    await FB.putPost(uidGen("post"), data);
+    if(profile.contact !== handle || profile.net !== data.net){ profile.contact = handle; profile.net = data.net; saveProfile(); }
+    $("annDlg").close(); showTab("mural"); toast("Anúncio publicado no mural!");
+  }catch(err){ $("annErr").textContent = "Não deu para publicar. Confira a internet e se as regras do Firebase foram atualizadas."; }
+  finally{ $("annSave").disabled = false; }
+};
+
+/* ---------- desejos ---------- */
+document.querySelectorAll("#wishSeg button").forEach(b => b.onclick = () => {
+  wishFilter = b.dataset.f;
+  document.querySelectorAll("#wishSeg button").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+  renderWish();
+});
+function renderWish(){
+  const list = wishes.filter(w => wishFilter === "got" ? w.got : !w.got).sort((a,b) => (b.prio||2) - (a.prio||2) || (a.createdAt||"").localeCompare(b.createdAt||""));
+  const box = $("wishList"); box.textContent = "";
+  $("wishEmpty").hidden = list.length > 0 || !loaded;
+  $("wishEmptyT").textContent = wishFilter === "got" ? "Nenhuma conquista ainda" : "Sua lista está vazia";
+  $("wishEmptyS").textContent = wishFilter === "got" ? "Quando conseguir um PC da lista, toque em \"Consegui!\"." : "Adicione o PC que você mais quer conseguir.";
+  list.forEach(w => {
+    const it = el("div", "witem" + (w.got ? " got" : ""));
+    const th = el("button","th"); th.type = "button"; th.setAttribute("aria-label", "Editar desejo");
+    if(w.img){ const im = el("img"); im.src = w.img; im.alt = w.name || "Desejo"; th.append(im); } else th.innerHTML = STICKERS.coracao;
+    th.onclick = () => openWish(w);
+    const tx = el("div","tx");
+    tx.append(el("b", null, w.name || "PC sem nome"), el("span", null, [w.member, w.group, w.source].filter(Boolean).join(" · ")));
+    tx.append(el("div","hearts", "♥".repeat(w.prio || 2)));
+    const act = el("div","act");
+    const got = el("button", "btn small" + (w.got ? "" : " primary"), w.got ? "Desfazer" : "Consegui!"); got.type = "button";
+    got.onclick = async () => {
+      try{ await FB.put(uid, "wishlist", w.id, Object.assign({}, strip(w), {got: !w.got})); if(!w.got){ toast("Aeee, conseguiu! 💚"); burst(got); } }
+      catch(e){ toast("Não deu para salvar. Tente de novo."); }
+    };
+    act.append(got);
+    if(w.got){
+      const mv = el("button","btn small pink","Pro binder"); mv.type = "button";
+      mv.onclick = () => openEdit(null, null, {wishId:w.id, name:w.name, member:w.member, group:w.group, source:w.source, img:w.img || null});
+      act.append(mv);
+    }
+    it.append(th, tx, act); box.append(it);
+  });
+}
+const strip = w => { const {id, ...rest} = w; return rest; };
+function setPrio(p){ wPrio = p; document.querySelectorAll("#wPrio button").forEach(b => b.setAttribute("aria-pressed", String(Number(b.dataset.p) === p))); }
+document.querySelectorAll("#wPrio button").forEach(b => b.onclick = () => setPrio(Number(b.dataset.p)));
+function openWish(w){
+  wEditing = w || null; wImg = w ? w.img || null : null;
+  $("wishTitle").textContent = w ? "Editar desejo" : "Novo desejo";
+  $("wName").value = w?.name || ""; $("wMember").value = w?.member || ""; $("wGroup").value = w?.group || ""; $("wSource").value = w?.source || "";
+  setPrio(w?.prio || 2); $("wDel").hidden = !w; $("wishErr").textContent = "";
+  setPreview("wPreview", wImg, "Foto opcional"); $("wNoPhoto").hidden = !wImg;
+  $("wishDlg").showModal();
+}
+$("wishAdd").onclick = () => openWish(null);
+$("wCancel").onclick = () => $("wishDlg").close();
+$("wGalBtn").onclick = () => $("wGalInput").click();
+$("wGalInput").onchange = async e => {
+  const f = e.target.files[0]; e.target.value = ""; if(!f) return;
+  const out = await editPhoto(await readFile(f), PC_ASPECT, 520);
+  if(out){ wImg = out; setPreview("wPreview", wImg); $("wNoPhoto").hidden = false; }
+};
+$("wNoPhoto").onclick = () => { wImg = null; setPreview("wPreview", null, "Foto opcional"); $("wNoPhoto").hidden = true; };
+$("wishForm").onsubmit = async e => {
+  e.preventDefault();
+  const name = $("wName").value.trim();
+  if(!name && !$("wMember").value.trim()){ $("wishErr").textContent = "Escreva pelo menos qual PC você quer."; return; }
+  const data = { name, member: $("wMember").value.trim(), group: $("wGroup").value.trim(), source: $("wSource").value.trim(),
+    prio: wPrio, img: wImg, got: wEditing ? !!wEditing.got : false, createdAt: wEditing ? wEditing.createdAt : new Date().toISOString() };
+  $("wSave").disabled = true;
+  try{ await FB.put(uid, "wishlist", wEditing ? wEditing.id : uidGen("w"), data); $("wishDlg").close(); toast(wEditing ? "Desejo atualizado!" : "Adicionado à lista!"); }
+  catch(err){ $("wishErr").textContent = "Não deu para salvar. Tente de novo."; }
+  finally{ $("wSave").disabled = false; }
+};
+$("wDel").onclick = async () => {
+  if(!wEditing || !confirm("Tirar este PC da lista de desejos?")) return;
+  try{ await FB.del(uid, "wishlist", wEditing.id); $("wishDlg").close(); } catch(e){ $("wishErr").textContent = "Não deu para excluir."; }
+};
+
+/* ---------- cor do site ---------- */
+const ACCENTS = {
+  verde:  { name:"Verde",  sw:"#39F58A", L:null, D:null },
+  rosa:   { name:"Rosa",   sw:"#FF6FAE",
+    L:{desk:"#FCE8F1",dot:"#F6CFE0",line:"#F2C2D7",mint:"#FFD6E7",neon:"#FF6FAE","neon-ink":"#B0236A",pocket:"#FFF2F8","on-neon":"#3D0820","neon-sh":"#E0468C",ink:"#3B1D2B",muted:"#8A5E73",page:"#FFFBFD"},
+    D:{desk:"#22101A",dot:"#3A1A2B",line:"#5A2A44",mint:"#4A2238",neon:"#FF7DB8","neon-ink":"#FF9CCB",pocket:"#3A1A2D","on-neon":"#3D0820","neon-sh":"#C23F7D",ink:"#FCE8F1",muted:"#C99AB2",page:"#2E1524"} },
+  lilas:  { name:"Lilás",  sw:"#9B7BFF",
+    L:{desk:"#EEE8FC",dot:"#DCD0F7",line:"#D3C6F5",mint:"#E3D9FF",neon:"#9B7BFF","neon-ink":"#5A36C9",pocket:"#F6F2FF","on-neon":"#140838","neon-sh":"#7A57E6",ink:"#2A1D4A",muted:"#6E60A0",page:"#FCFBFF"},
+    D:{desk:"#15112A",dot:"#241D45",line:"#3B3170",mint:"#30285C",neon:"#A88CFF","neon-ink":"#C1AEFF",pocket:"#262049","on-neon":"#140838","neon-sh":"#6D4FD6",ink:"#EEE8FC",muted:"#A99CD6",page:"#1D1738"} },
+  azul:   { name:"Azul",   sw:"#3FA9F5",
+    L:{desk:"#E3F1FB",dot:"#C8E2F5",line:"#BFDBF1",mint:"#CFE8FA",neon:"#3FA9F5","neon-ink":"#145E96",pocket:"#F1F8FE","on-neon":"#04243D","neon-sh":"#2286D0",ink:"#16304A",muted:"#577A96",page:"#FBFDFF"},
+    D:{desk:"#0B1823",dot:"#14293A",line:"#234560",mint:"#1A3650",neon:"#5BB8FF","neon-ink":"#8ACDFF",pocket:"#162C40","on-neon":"#04243D","neon-sh":"#2A7FC0",ink:"#E3F1FB",muted:"#94B6CF",page:"#112233"} },
+  pessego:{ name:"Pêssego", sw:"#FF9A5C",
+    L:{desk:"#FDEEE3",dot:"#F7D9C4",line:"#F3CDB3",mint:"#FFE0CC",neon:"#FF9A5C","neon-ink":"#A84A12",pocket:"#FFF6F0","on-neon":"#3D1500","neon-sh":"#E5773A",ink:"#3E2414",muted:"#8C6650",page:"#FFFCFA"},
+    D:{desk:"#241409",dot:"#3D2414",line:"#5C3720",mint:"#4A2C19",neon:"#FFA86E","neon-ink":"#FFC49C",pocket:"#3A2314","on-neon":"#3D1500","neon-sh":"#C9682E",ink:"#FDEEE3",muted:"#CCA388",page:"#2E1A0F"} },
+  amarelo:{ name:"Amarelo", sw:"#F5C531",
+    L:{desk:"#FDF6DD",dot:"#F5E7B0",line:"#EFDFA2",mint:"#FFF0BF",neon:"#F5C531","neon-ink":"#8A6400",pocket:"#FFFBEB","on-neon":"#3A2A00","neon-sh":"#D9A814",ink:"#3A3014",muted:"#857550",page:"#FFFEF8"},
+    D:{desk:"#1F1A08",dot:"#352D10",line:"#5A4C1A",mint:"#463B14",neon:"#FFD54A","neon-ink":"#FFE07F",pocket:"#332B10","on-neon":"#3A2A00","neon-sh":"#BF9418",ink:"#FDF6DD",muted:"#C9B887",page:"#2A2310"} }
+};
+function applyAccent(name, color){
+  const a = name === "custom" && color ? Object.assign({sw: color}, customPalette(color)) : (ACCENTS[name] || ACCENTS.verde), css = $("accentCss");
+  if(!a.L){ css.textContent = ""; }
+  else {
+    const v = o => Object.entries(o).map(([k, val]) => "--" + k + ":" + val + ";").join("");
+    css.textContent = ":root{" + v(a.L) + "}" +
+      "@media (prefers-color-scheme:dark){:root:not([data-theme=\"light\"]){" + v(a.D) + "}}" +
+      ":root[data-theme=\"dark\"]{" + v(a.D) + "}";
+  }
+  try{ localStorage.setItem("mdb-accent", name); if(color) localStorage.setItem("mdb-accent-color", color); }catch(e){}
+}
+function renderAccents(){
+  const box = $("accentSw"); box.textContent = "";
+  Object.entries(ACCENTS).forEach(([k, a]) => {
+    const b = el("button"); b.type = "button"; b.style.backgroundColor = a.sw; b.setAttribute("aria-label", "Cor " + a.name);
+    b.setAttribute("aria-pressed", String((profile.accent || "verde") === k));
+    b.onclick = () => { profile.accent = k; applyAccent(k); saveProfile(); renderAccents(); };
+    box.append(b);
+  });
+  const any = el("button","rainbow"); any.type = "button"; any.setAttribute("aria-label", "Escolher qualquer cor");
+  any.setAttribute("aria-pressed", String(profile.accent === "custom"));
+  if(profile.accent === "custom"){ any.style.boxShadow = "0 0 0 3px " + profile.accentColor + ",0 0 0 6px var(--ink)"; }
+  any.onclick = openPicker; box.append(any);
+}
+
+/* ---------- sugestões ---------- */
+const SUG_KEY = "9ff0b190-b998-4a0f-9c02-a77876573189";
+$("sugBtn").onclick = () => {
+  $("sugBody").hidden = false; $("sugDone").hidden = true; $("sugErr").textContent = "";
+  $("sugMsg").value = ""; $("sugMail").value = (auth_email || ""); $("sugSubj").selectedIndex = 0;
+  $("sugDlg").showModal();
+};
+$("sugCancel").onclick = () => $("sugDlg").close();
+$("sugClose").onclick = () => $("sugDlg").close();
+$("sugForm").onsubmit = async e => {
+  e.preventDefault();
+  const msg = $("sugMsg").value.trim(), subj = $("sugSubj").value, mail = $("sugMail").value.trim();
+  if(msg.length < 5){ $("sugErr").textContent = "Escreva um pouquinho mais na mensagem."; return; }
+  const validMail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail);
+  $("sugSend").disabled = true; $("sugErr").textContent = "";
+  const data = { access_key: SUG_KEY, subject: "My dear binder: " + subj, from_name: "My dear binder",
+    Assunto: subj, Mensagem: msg, "Responder para": validMail ? mail : "(não informado)" };
+  if(validMail) data.replyto = mail;
+  try{
+    const r = await fetch("https://api.web3forms.com/submit", {
+      method: "POST", headers: { "Content-Type": "application/json", "Accept": "application/json" }, body: JSON.stringify(data)
+    });
+    const j = await r.json().catch(() => ({}));
+    if(!r.ok || j.success === false) throw new Error(j.message || ("status " + r.status));
+    $("sugBody").hidden = true; $("sugDone").hidden = false;
+  }catch(err){
+    $("sugErr").textContent = "Não deu para enviar agora. Confira a internet e tente de novo.";
+  }finally{ $("sugSend").disabled = false; }
+};
+
+/* ---------- eu ---------- */
+function applyTheme(t){
+  if(t === "light" || t === "dark") document.documentElement.dataset.theme = t; else delete document.documentElement.dataset.theme;
+  try{ localStorage.setItem("mdb-theme", t); }catch(e){}
+}
+try{ applyTheme(localStorage.getItem("mdb-theme") || "auto"); }catch(e){}
+function renderMe(){
+  paintAvatar($("bigAv"), profile);
+  $("photoDel").hidden = !profile.photo; $("avPick").hidden = !!profile.photo;
+  if(document.activeElement !== $("pBio")) $("pBio").value = profile.bio || "";
+  renderBinderList(); renderAccents();
+  $("meName").textContent = profile.nick || "Colecionador(a)";
+  $("meUser").textContent = profile.username ? "@" + profile.username : "Escolha seu @ abaixo";
+  const meB = $("meBadge"); meB.textContent = ""; if(isCreator(uid)) meB.append(creatorBadge());
+  if(document.activeElement !== $("pUser")) $("pUser").value = profile.username || "";
+  $("myUid").textContent = uid || "";
+  refreshMyCounts();
+  if(document.activeElement !== $("pNick")) $("pNick").value = profile.nick || "";
+  
+  if(document.activeElement !== $("pContact")) $("pContact").value = profile.contact || "";
+  $("pNet").value = profile.net || "Instagram";
+  const tray = $("avTray"); tray.textContent = "";
+  Object.keys(STICKERS).forEach(k => {
+    const b = el("button"); b.type = "button"; b.innerHTML = STICKERS[k]; b.setAttribute("aria-label", "Avatar " + k);
+    if(k === profile.avatar){ b.style.borderColor = "var(--neon)"; b.style.boxShadow = "0 0 0 3px var(--neon)"; }
+    b.onclick = () => { profile.avatar = k; saveProfile(); renderMe(); paintAvatar($("topAvatar"), profile); };
+    tray.append(b);
+  });
+  const st = $("stats"); st.textContent = "";
+  [[allPcs.length,"PCs"],[binders.length, binders.length === 1 ? "binder" : "binders"],[allPcs.filter(p => p.status === "Para troca" || p.status === "Para venda").length,"troca/venda"],[wishes.filter(w => !w.got).length,"desejos"]]
+    .forEach(([n,l]) => { const s = el("div","stat"); s.append(el("b", null, n), el("span", null, l)); st.append(s); });
+  const counts = new Map();
+  allPcs.forEach(p => { const k = norm(p.member); if(!k) return; const c = counts.get(k) || {name:p.member, n:0}; c.n++; counts.set(k, c); });
+  const arr = [...counts.values()].sort((a,b) => b.n - a.n).slice(0, 8), max = arr[0] ? arr[0].n : 1;
+  const mb = $("mbars"); mb.textContent = "";
+  if(!arr.length) mb.append(el("p","note","Preencha o campo Membro dos seus PCs para ver a contagem aqui."));
+  arr.forEach(c => { const r = el("div","mbar"); const bar = el("i"); bar.style.width = Math.max(8, c.n / max * 100) + "%";
+    const wrap = el("div"); wrap.append(bar); r.append(el("span", null, c.name), wrap, el("b", null, c.n)); mb.append(r); });
+  document.querySelectorAll("#themeSeg button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.t === (profile.theme || "auto"))));
+}
+$("pNet").onchange = e => { profile.net = e.target.value; saveProfile(); };
+["pNick","pContact","pBio"].forEach(id => $(id).oninput = e => {
+  const key = {pNick:"nick", pContact:"contact", pBio:"bio"}[id]; profile[key] = e.target.value.trim();
+  if(id === "pNick") $("meName").textContent = profile.nick || "Colecionador(a)";
+  saveProfile();
+});
+document.querySelectorAll("#themeSeg button").forEach(b => b.onclick = () => { profile.theme = b.dataset.t; applyTheme(profile.theme); saveProfile(); renderMe(); });
+
+/* ---------- vários binders ---------- */
+function computeBinders(){
+  const list = binderDocs.map(d => Object.assign(fixCover(d), {id: d.id, order: d.order || 0}));
+  if(!list.some(b => b.id === "main")) list.push(Object.assign(fixCover(legacyCover), {id: "main", order: 0}));
+  list.sort((a,b) => (a.order || 0) - (b.order || 0));
+  binders = list;
+  if(!binders.some(b => b.id === curBinder)) curBinder = "main";
+  if(!dragging && !decorating){ cover = fixCover(binders.find(b => b.id === curBinder)); renderCover(); }
+}
+function splitPcs(){ pcs = allPcs.filter(p => binderOf(p) === curBinder); }
+function switchBinder(id, keepTab){
+  if(decorating) finishDeco(false);
+  curBinder = id; try{ localStorage.setItem("mdb-bind-" + uid, id); }catch(e){}
+  page = 0; query = ""; $("search").value = "";
+  splitPcs(); cover = fixCover(binders.find(b => b.id === id)); renderCover();
+  setOpen(false);
+  if(!keepTab) showTab("binder"); else renderAll();
+}
+function renderBinderBar(){
+  const bar = $("binderBar"); bar.textContent = "";
+  binders.forEach(b => {
+    const c = el("button","bchip"); c.type = "button"; c.setAttribute("aria-pressed", String(b.id === curBinder));
+    const sw = el("i"); sw.style.setProperty("--c", b.color); c.append(sw, el("span", null, b.title || "Meu binder"));
+    c.onclick = () => { if(b.id !== curBinder) switchBinder(b.id); };
+    bar.append(c);
+  });
+  const add = el("button","bchip add","+ Novo binder"); add.type = "button"; add.onclick = openNewBinder; bar.append(add);
+  $("delBinder").hidden = curBinder === "main";
+}
+function renderBinderList(){
+  const box = $("bList"); box.textContent = "";
+  binders.forEach(b => {
+    const r = el("div","brow");
+    const mc = el("div","mc"); mc.style.setProperty("--c", b.color); mc.style.setProperty("--b", b.band);
+    const n = allPcs.filter(p => binderOf(p) === b.id).length;
+    const bt = el("div","bt"); bt.append(el("b", null, b.title || "Meu binder"), el("span", null, n + (n === 1 ? " photocard" : " photocards") + (b.id === curBinder ? " · aberto agora" : "")));
+    const go = el("button","btn small" + (b.id === curBinder ? "" : " primary"), "Abrir"); go.type = "button";
+    go.onclick = () => switchBinder(b.id);
+    r.append(mc, bt, go); box.append(r);
+  });
+}
+function openNewBinder(){
+  nbColor = COVER_COLORS[(binders.length) % COVER_COLORS.length];
+  $("nbName").value = ""; $("nbErr").textContent = "";
+  paintNbColors(); $("nbDlg").showModal();
+}
+function paintNbColors(){
+  const box = $("nbColors"); box.textContent = "";
+  COVER_COLORS.forEach(c => { const b = el("button"); b.type = "button"; b.style.backgroundColor = c; b.setAttribute("aria-label", "Cor " + c);
+    b.setAttribute("aria-pressed", String(c === nbColor)); b.onclick = () => { nbColor = c; paintNbColors(); }; box.append(b); });
+}
+$("bAddMe").onclick = openNewBinder;
+$("nbCancel").onclick = () => $("nbDlg").close();
+$("nbForm").onsubmit = async e => {
+  e.preventDefault();
+  const title = $("nbName").value.trim();
+  if(!title){ $("nbErr").textContent = "Dê um nome para o binder."; return; }
+  if(binders.length >= 30){ $("nbErr").textContent = "Você já tem binders demais!"; return; }
+  const id = uidGen("b"), data = Object.assign(defaultCover(), {title, color: nbColor, order: Date.now()});
+  $("nbSave").disabled = true;
+  try{
+    await FB.put(uid, "binders", id, data);
+    binderDocs = binderDocs.filter(d => d.id !== id).concat([Object.assign({id}, data)]); computeBinders();
+    $("nbDlg").close(); switchBinder(id); toast("Binder " + title + " criado!");
+  }catch(err){ $("nbErr").textContent = "Não deu para criar. Tente de novo."; }
+  finally{ $("nbSave").disabled = false; }
+};
+$("delBinder").onclick = async () => {
+  if(curBinder === "main") return;
+  const mine = allPcs.filter(p => binderOf(p) === curBinder), name = cover.title || "este binder";
+  const msg = mine.length ? "Excluir " + name + "? Os " + mine.length + " PCs dele vão para o primeiro binder." : "Excluir " + name + "?";
+  if(!confirm(msg)) return;
+  try{
+    const used = new Set(allPcs.filter(p => binderOf(p) === "main").map(p => p.slot)); let s = 0;
+    for(const p of mine){ while(used.has(s)) s++; used.add(s); const {id, ...rest} = p; await FB.put(uid, "pcs", id, Object.assign(rest, {binderId: "main", slot: s})); }
+    const gone = curBinder; await FB.del(uid, "binders", gone);
+    binderDocs = binderDocs.filter(d => d.id !== gone); decorating = false; $("panel").hidden = true;
+    computeBinders(); switchBinder("main"); toast("Binder excluído");
+  }catch(err){ toast("Não deu para excluir. Tente de novo."); }
+};
+
+/* ---------- foto de perfil ---------- */
+function squareImage(src, size){
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => { const c = document.createElement("canvas"); c.width = c.height = size; const x = c.getContext("2d");
+      const s = Math.min(img.width, img.height); x.drawImage(img, (img.width - s)/2, (img.height - s)/2, s, s, 0, 0, size, size);
+      resolve(c.toDataURL("image/jpeg", .82)); };
+    img.onerror = () => reject(new Error("Não foi possível abrir essa imagem."));
+    img.src = src;
+  });
+}
+$("photoBtn").onclick = () => $("photoInput").click();
+$("photoInput").onchange = async e => {
+  const f = e.target.files[0]; e.target.value = ""; if(!f) return;
+  const out = await editPhoto(await readFile(f), 1, 240, true);
+  if(!out) return;
+  profile.photo = out; saveProfile(); renderMe(); paintAvatar($("topAvatar"), profile); toast("Foto atualizada!");
+};
+$("photoDel").onclick = () => { profile.photo = null; saveProfile(); renderMe(); paintAvatar($("topAvatar"), profile); };
+
+/* ---------- tutorial ---------- */
+const TOUR = [
+  { t:"Oi! Eu sou o Tito 🐸", d:"Vou te mostrar rapidinho como usar o My dear binder. Toque em Próximo para seguir cada passo comigo.", tab:"binder", open:false },
+  { sel:"#binderBar", tab:"binder", open:false, t:"Seus binders", d:"Aqui ficam todos os seus binders. Toque em um para trocar ou em + Novo binder para criar outro, tipo um só do seu bias." },
+  { sel:"#cover", tab:"binder", open:false, t:"A capa", d:"Esta é a capa do binder aberto agora. Toque nela ou em Abrir binder para ver seus PCs." },
+  { sel:"#decoBtn", tab:"binder", open:false, t:"Deixe com a sua cara", d:"Em Personalizar você muda a cor da capa, a estampa, o elástico, as argolas e as páginas." },
+  { sel:"#frameGrp", tab:"binder", open:false, deco:true, t:"Adesivos com foto", d:"Escolha uma moldura (redonda, coração, quadrada ou estrela) e uma foto sua. Depois é só arrastar pela capa, girar e mudar o tamanho." },
+  { sel:"#sheet", tab:"binder", open:true, t:"As páginas", d:"Cada página tem 9 bolsos. Toque num bolso com + para guardar um PC: dá para escanear com a câmera ou escolher da galeria." },
+  { sel:"#sheet", tab:"binder", open:true, t:"Mudar de lugar", d:"Cada bolso tem um número. Segure o dedo em cima de um PC e digite o lugar novo, tipo 5. Se já tiver um PC lá, os dois trocam de lugar." },
+  { sel:"#addBtn", tab:"binder", open:true, t:"Adicionar PC", d:"Depois de escolher a foto, você pode cortar, girar e dar zoom. Também anota o membro, se é para troca ou venda, a proteção (sleeve, double sleeve, toploader) e quando trocou a sleeve." },
+  { sel:"#search", tab:"binder", open:true, t:"Buscar", d:"Procure qualquer PC pelo nome, membro, álbum ou código. O binder pula direto para a página certa." },
+  { sel:'.tabs button[data-tab="trade"]', tab:"trade", t:"Trocas", d:"Os PCs marcados como Para troca ou Para venda ficam separados aqui. O botão Copiar lista monta um texto pronto para postar." },
+  { sel:'.tabs button[data-tab="mural"]', tab:"mural", t:"Mural", d:"O mural é de todo mundo do site. Anuncie seus PCs em + Anunciar. Só a sua foto e o seu @ aparecem, e quem gostar chama você na rede social." },
+  { sel:"#findBtn", tab:"mural", t:"Encontrar e seguir", d:"Digite o @ de alguém para abrir o perfil, seguir e visualizar os binders da pessoa. No filtro Seguindo, o mural mostra só anúncios de quem você segue." },
+  { sel:"#bellBtn", t:"Notificações", d:"Quando alguém começar a seguir você, aparece um número aqui no sininho. Toque para ver quem foi e seguir de volta." },
+  { sel:'.tabs button[data-tab="wish"]', tab:"wish", t:"Desejos", d:"Anote os PCs que você está caçando. Quando conseguir, toque em Consegui! e mande direto para o binder." },
+  { sel:"#unBox", tab:"me", t:"Seu @ no site", d:"Escolha um @ só seu. É com ele que as pessoas encontram você, seguem e visualizam seus binders." },
+  { sel:"#myStats", tab:"me", t:"Seguidores e anúncios", d:"Aqui aparecem quantos anúncios você tem, quem segue você e quem você segue. Em Ver meu perfil público você vê como os outros enxergam seu perfil." },
+  { sel:"#profCard", tab:"me", t:"Seu perfil", d:"Coloque sua foto (dá para cortar e girar), nome e bio. Eles aparecem no seu perfil público junto com seus binders. Sua lista de desejos continua só sua." },
+  { sel:"#accentSw", tab:"me", t:"Cor do site", d:"Escolha uma das cores prontas ou toque na bolinha colorida para escolher qualquer cor, e arraste para deixar mais clara ou mais escura." },
+  { sel:"#sugCard", tab:"me", t:"Sugestões", d:"Achou um problema ou teve uma ideia? Escolha o assunto, escreva e envie. Eu levo a mensagem direitinho!" },
+  { sel:"#helpBtn", t:"Prontinho! 💚", d:"Se quiser me ver de novo, é só tocar no ? aqui em cima. Boa coleção!" }
+];
+function startTour(){
+  document.querySelectorAll("dialog[open]").forEach(d => d.close());
+  if(decorating) finishDeco(false);
+  tourOn = true; tourIdx = 0; $("tour").hidden = false;
+  const dots = $("tourDots"); dots.textContent = ""; TOUR.forEach(() => dots.append(el("i")));
+  goTour(0);
+}
+function endTour(){
+  tourOn = false; $("tour").hidden = true;
+  if(decorating) finishDeco(false);
+  if(!profile.tutorialDone){ profile.tutorialDone = true; saveProfile(); }
+  showTab("binder"); setOpen(false);
+}
+async function goTour(i){
+  tourIdx = i; const s = TOUR[i];
+  const wasOpen = isOpen;
+  if(s.tab && s.tab !== tab) showTab(s.tab);
+  if(s.open === true && !isOpen) setOpen(true);
+  if(s.open === false && isOpen) setOpen(false);
+  if(s.deco && !decorating) $("decoBtn").click();
+  if(!s.deco && decorating) finishDeco(false);
+  $("tourT").textContent = s.t; $("tourD").textContent = s.d;
+  [...$("tourDots").children].forEach((d, k) => d.classList.toggle("on", k === i));
+  $("tourBack").hidden = i === 0;
+  $("tourNext").textContent = i === TOUR.length - 1 ? "Terminar" : "Próximo";
+  $("tourSkip").hidden = i === TOUR.length - 1;
+  const animWait = (s.open !== undefined && s.open !== wasOpen) ? 700 : 80;
+  await new Promise(r => setTimeout(r, animWait));
+  if(tourIdx !== i) return;
+  placeTour();
+  $("tourNext").focus({preventScroll:true});
+}
+function placeTour(){
+  if(!tourOn) return;
+  const s = TOUR[tourIdx], hole = $("tourHole"), bub = $("tourBub");
+  const t = s.sel ? document.querySelector(s.sel) : null;
+  bub.style.top = bub.style.bottom = "";
+  if(!t){ hole.classList.add("none"); bub.style.top = "50%"; bub.style.transform = "translateY(-50%)"; return; }
+  bub.style.transform = "";
+  const fixedParent = t.closest(".tabs, .top");
+  if(!fixedParent) t.scrollIntoView({block: "center", behavior: "instant"});
+  const r = t.getBoundingClientRect(), pad = 6, vh = innerHeight;
+  hole.classList.remove("none");
+  Object.assign(hole.style, { left: (r.left - pad) + "px", top: (r.top - pad) + "px", width: (r.width + pad*2) + "px", height: (r.height + pad*2) + "px" });
+  const bh = bub.offsetHeight, below = vh - r.bottom - 16, above = r.top - 16;
+  if(below >= bh + 10) bub.style.top = (r.bottom + pad + 12) + "px";
+  else if(above >= bh + 10) bub.style.bottom = (vh - r.top + pad + 12) + "px";
+  else bub.style.bottom = "calc(96px + env(safe-area-inset-bottom,0px))";
+}
+addEventListener("resize", placeTour);
+$("tourNext").onclick = () => { if(tourIdx >= TOUR.length - 1) endTour(); else goTour(tourIdx + 1); };
+$("tourBack").onclick = () => { if(tourIdx > 0) goTour(tourIdx - 1); };
+$("tourSkip").onclick = endTour;
+addEventListener("keydown", e => { if(!tourOn) return; if(e.key === "Escape") endTour(); if(e.key === "ArrowRight") $("tourNext").click(); if(e.key === "ArrowLeft") $("tourBack").click(); });
+$("helpBtn").onclick = startTour;
+$("tourBtn").onclick = startTour;
+
+/* ---------- convite para compartilhar ---------- */
+let usageTracked = false;
+const todayKey = () => { const d = new Date(); return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0"); };
+function trackUsage(){
+  if(usageTracked) return; usageTracked = true;
+  const today = todayKey();
+  if(!profile.firstSeen){ profile.firstSeen = today; profile.daysUsed = 1; profile.lastDay = today; saveProfile(); return; }
+  if(profile.lastDay !== today){ profile.daysUsed = (profile.daysUsed || 1) + 1; profile.lastDay = today; saveProfile(); }
+  const since = (new Date(today + "T12:00:00") - new Date(profile.firstSeen + "T12:00:00")) / 864e5;
+  if(!profile.shareAsked && since >= 2 && (profile.daysUsed || 1) >= 2) setTimeout(showShare, 4000);
+}
+function showShare(){
+  if(tourOn || document.querySelector("dialog[open]")){ setTimeout(showShare, 5000); return; }
+  profile.shareAsked = true; saveProfile();
+  $("shareDlg").showModal();
+}
+$("shareLater").onclick = () => $("shareDlg").close();
+$("shareX").onclick = () => setTimeout(() => $("shareDlg").close(), 300);
+$("shareSug").onclick = () => { $("shareDlg").close(); showTab("me"); $("sugBtn").click(); };
+$("shareSite").onclick = async () => {
+  const url = location.origin + location.pathname, text = "Olha que fofo esse site pra guardar photocards num binder virtual 💚";
+  try{
+    if(navigator.share){ await navigator.share({ title: "My dear binder", text, url }); }
+    else { await navigator.clipboard.writeText(text + " " + url); toast("Link copiado! É só colar onde quiser."); }
+  }catch(e){}
+};
+
+/* ---------- perfis públicos e seguir ---------- */
+const CREATOR_UIDS = ["7XnBhENRP0ZaQdb5U0LLwDhyQuv2"];
+const isCreator = u => CREATOR_UIDS.includes(u);
+const CROWN = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8l4.5 4L12 5l4.5 7L21 8l-2 11H5z" fill="var(--sun)" stroke="#8A6400" stroke-width="1.4" stroke-linejoin="round"/></svg>';
+let followingSet = new Set(), viewUser = null, prevTab = "binder", countsAt = 0;
+const cleanUser = s => (s || "").toLowerCase().trim().replace(/^@+/, "").replace(/[^a-z0-9._]/g, "");
+function creatorBadge(){ const b = el("div","creator"); b.textContent = "Criadora"; return b; }
+async function refreshMyCounts(force){
+  if(!uid || (!force && Date.now() - countsAt < 20000)) return;
+  countsAt = Date.now();
+  try{
+    const [a, b, c] = await Promise.all([FB.countPosts(uid), FB.countFollowers(uid), FB.countFollowing(uid)]);
+    $("cPosts").textContent = a; $("cFollowers").querySelector("b").textContent = b; $("cFollowing").querySelector("b").textContent = c;
+  }catch(e){}
+}
+$("cFollowers").onclick = () => openList(uid, "followers");
+$("cFollowing").onclick = () => openList(uid, "following");
+$("viewMine").onclick = () => { if(!profile.username){ toast("Escolha seu @ primeiro."); $("pUser").focus(); return; } openUser(uid); };
+$("copyUid").onclick = async () => { try{ await navigator.clipboard.writeText(uid); toast("ID copiado!"); }catch(e){ toast(uid); } };
+$("unSave").onclick = async () => {
+  const n = cleanUser($("pUser").value), msg = $("unMsg");
+  $("pUser").value = n;
+  if(n.length < 3 || n.length > 20){ msg.textContent = "Seu @ precisa ter de 3 a 20 caracteres."; msg.style.color = "var(--danger)"; return; }
+  if(n === profile.username){ msg.textContent = "Esse já é o seu @."; msg.style.color = ""; return; }
+  $("unSave").disabled = true;
+  try{
+    const ex = await FB.getUsername(n);
+    if(ex && ex.uid !== uid){ msg.textContent = "Esse @ já está em uso. Tente outro."; msg.style.color = "var(--danger)"; return; }
+    if(!ex) await FB.claimUsername(n, uid);
+    const old = profile.username; profile.username = n; saveProfile();
+    if(old && old !== n) FB.releaseUsername(old).catch(() => {});
+    msg.textContent = "Pronto! Agora as pessoas te encontram como @" + n + "."; msg.style.color = "var(--neon-ink)";
+    renderMe(); toast("@" + n + " é seu!");
+  }catch(e){ msg.textContent = "Esse @ já está em uso ou deu um erro. Tente outro."; msg.style.color = "var(--danger)"; }
+  finally{ $("unSave").disabled = false; }
+};
+$("findBtn").onclick = () => { $("findIn").value = ""; $("findErr").textContent = ""; $("findDlg").showModal(); };
+$("findCancel").onclick = () => $("findDlg").close();
+$("findForm").onsubmit = async e => {
+  e.preventDefault();
+  const n = cleanUser($("findIn").value);
+  if(!n){ $("findErr").textContent = "Digite um @."; return; }
+  $("findGo").disabled = true;
+  try{
+    const r = await FB.getUsername(n);
+    if(!r){ $("findErr").textContent = "Não encontramos @" + n + " no My dear binder."; return; }
+    $("findDlg").close(); openUser(r.uid);
+  }catch(err){ $("findErr").textContent = "Não deu para buscar agora. Tente de novo."; }
+  finally{ $("findGo").disabled = false; }
+};
+$("userBack").onclick = () => showTab(prevTab || "mural");
+async function openUser(u){
+  if(!u) return;
+  if(tab !== "user") prevTab = tab;
+  showTab("user");
+  const box = $("userBox"); box.textContent = ""; box.append(el("p","note","Carregando perfil…"));
+  try{
+    const [pr, binds, pcsL, nF, nG, postsL, amI] = await Promise.all([FB.getProfile(u), FB.getUserBinders(u), FB.getUserPcs(u),
+      FB.countFollowers(u), FB.countFollowing(u), FB.getUserPosts(u), u !== uid ? FB.isFollowing(uid, u) : Promise.resolve(false)]);
+    if(!pr){ box.textContent = ""; box.append(el("div","empty")); box.firstChild.innerHTML = STICKERS.nuvem; box.firstChild.firstChild.style.width = "80px";
+      box.firstChild.append(el("b", null, "Perfil ainda não disponível"), document.createTextNode(u === uid ? "Escolha seu @ na aba Eu para ativar seu perfil público." : "Essa pessoa ainda não escolheu um @."));
+      return; }
+    const active = postsL.filter(p => p.status !== "finalizado").sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0));
+    viewUser = { uid: u, pr, binds, pcsL, nF, nG, posts: active, amI };
+    renderUser();
+  }catch(e){
+    box.textContent = ""; box.append(el("p","note","Não deu para abrir este perfil. Confira a internet e se as regras do Firebase foram atualizadas."));
+  }
+}
+function userBinders(v){
+  const list = v.binds.map(d => Object.assign(fixCover(d), {id: d.id, order: d.order || 0}));
+  if(!list.some(b => b.id === "main") && v.pcsL.some(p => (p.binderId || "main") === "main")) list.push(Object.assign(defaultCover(), {id:"main", order:0}));
+  return list.sort((a,b) => a.order - b.order);
+}
+function renderUser(){
+  const v = viewUser, pr = v.pr, box = $("userBox"); box.textContent = "";
+  const head = el("div","card pubhead");
+  const av = el("div","bigav"); paintAvatar(av, pr); head.append(av);
+  head.append(el("h2", null, pr.nick || ("@" + pr.username)), el("p","uname", "@" + pr.username));
+  if(isCreator(v.uid)) head.append(creatorBadge());
+  if(pr.bio) head.append(el("p","bio", pr.bio));
+  const cnt = el("div","counts");
+  const c1 = el("div"); c1.append(el("b", null, v.posts.length), el("span", null, v.posts.length === 1 ? "anúncio" : "anúncios"));
+  const c2 = el("button"); c2.type = "button"; c2.append(el("b", null, v.nF), el("span", null, v.nF === 1 ? "seguidor" : "seguidores")); c2.onclick = () => openList(v.uid, "followers");
+  const c3 = el("button"); c3.type = "button"; c3.append(el("b", null, v.nG), el("span", null, "seguindo")); c3.onclick = () => openList(v.uid, "following");
+  cnt.append(c1, c2, c3); head.append(cnt);
+  const acts = el("div","pubacts");
+  if(v.uid === uid){
+    const ed = el("button","btn small","Editar perfil"); ed.type = "button"; ed.onclick = () => showTab("me"); acts.append(ed);
+  } else {
+    const fb = el("button", "btn small " + (v.amI ? "following" : "primary"), v.amI ? "Seguindo ✓" : "Seguir"); fb.type = "button";
+    fb.onclick = () => toggleFollow(fb); acts.append(fb);
+  }
+  const url = contactUrl(pr.net, pr.contact);
+  if(url){ const a = el("a","btn small pink","Abrir " + (pr.net === "X (Twitter)" ? "X" : pr.net)); a.href = url; a.target = "_blank"; a.rel = "noopener noreferrer"; a.style.textDecoration = "none"; acts.append(a); }
+  head.append(acts);
+  box.append(head);
+
+  const bl = userBinders(v);
+  const sec = el("div","sec"); sec.append(el("h2","title", "Binders"));
+  if(!bl.length) sec.append(el("p","note","Nenhum binder ainda."));
+  const grid = el("div","bcards");
+  bl.forEach(b => {
+    const n = v.pcsL.filter(p => (p.binderId || "main") === b.id).length;
+    const c = el("button","bcard"); c.type = "button";
+    const mc = el("div","mc"); mc.style.setProperty("--c", b.color); mc.style.setProperty("--b", b.band); mc.append(el("span", null, b.title || "Meu binder"));
+    c.append(mc, el("small", null, "Visualizar binder"), el("b", null, (b.title || "Meu binder") + " · @" + pr.username), el("small", null, n + (n === 1 ? " photocard" : " photocards")));
+    c.onclick = () => openPublicBinder(b);
+    grid.append(c);
+  });
+  sec.append(grid); box.append(sec);
+
+  const sp = el("div","sec"); sp.append(el("h2","title","Anúncios"));
+  if(!v.posts.length) sp.append(el("p","note","Nenhum anúncio ativo."));
+  const feed = el("div","feed"); v.posts.forEach(p => feed.append(postCard(p))); sp.append(feed); box.append(sp);
+}
+async function toggleFollow(btn){
+  const v = viewUser;
+  if(!profile.username){ toast("Escolha seu @ na aba Eu antes de seguir pessoas."); return; }
+  btn.disabled = true;
+  try{
+    if(v.amI){ await FB.unfollow(uid, v.uid); v.amI = false; v.nF = Math.max(0, v.nF - 1); }
+    else { await FB.follow(uid, v.uid); v.amI = true; v.nF++; toast("Agora você segue @" + v.pr.username + "!"); }
+    countsAt = 0; renderUser();
+  }catch(e){ toast("Não deu para seguir agora. Tente de novo."); btn.disabled = false; }
+}
+async function openList(u, kind){
+  $("listTitle").textContent = kind === "followers" ? "Seguidores" : "Seguindo";
+  const box = $("listBox"); box.textContent = ""; box.append(el("p","note","Carregando…"));
+  $("listDlg").showModal();
+  try{
+    const ids = kind === "followers" ? await FB.listFollowers(u) : await FB.listFollowing(u);
+    const profs = (await Promise.all(ids.slice(0, 100).map(id => FB.getProfile(id).catch(() => null)))).map((p, i) => p && Object.assign({uid: ids[i]}, p)).filter(Boolean);
+    box.textContent = "";
+    if(!profs.length) box.append(el("p","note", kind === "followers" ? "Ninguém por aqui ainda." : "Ainda não segue ninguém."));
+    profs.forEach(p => {
+      const r = el("button","urow"); r.type = "button";
+      const av = el("div","av"); paintAvatar(av, p);
+      const tx = el("div"); tx.append(el("b", null, "@" + p.username), el("span", null, p.nick || ""));
+      r.append(av, tx); r.onclick = () => { $("listDlg").close(); openUser(p.uid); };
+      box.append(r);
+    });
+  }catch(e){ box.textContent = ""; box.append(el("p","note","Não deu para carregar.")); }
+}
+$("listClose").onclick = () => $("listDlg").close();
+
+/* ---------- visualizar binder de outra pessoa ---------- */
+function stickerNode(st){
+  const n = el("div", "stk" + (st.k === "txt" ? " txt" : ""));
+  if(st.k === "txt") n.textContent = st.t; else if(st.k === "foto") n.innerHTML = photoSticker(st); else n.innerHTML = STICKERS[st.k] || "";
+  n.style.left = st.x + "%"; n.style.top = st.y + "%";
+  n.style.width = st.k === "txt" ? "auto" : ((st.k === "foto" ? 24 : 17) * (st.s || 1)) + "%";
+  n.style.transform = "translate(-50%,-50%) rotate(" + (st.r || 0) + "deg)" + (st.k === "txt" ? " scale(" + (st.s || 1) + ")" : "");
+  return n;
+}
+function openPublicBinder(b){
+  const v = viewUser, box = $("userBox"); box.textContent = "";
+  const list = v.pcsL.filter(p => (p.binderId || "main") === b.id);
+  const top = el("div","backbar");
+  const back = el("button","btn small","‹ Perfil de @" + v.pr.username); back.type = "button"; back.onclick = () => renderUser();
+  top.append(back); box.append(top);
+  box.append(el("h2","title", b.title || "Meu binder"), el("p","sub", "Binder de @" + v.pr.username + " · " + list.length + (list.length === 1 ? " photocard" : " photocards")));
+  const book = el("div","book");
+  book.style.setProperty("--cc", b.color); book.style.setProperty("--band", b.band); book.style.setProperty("--ringbg", RINGS[b.ring] || RINGS.prata);
+  const pg = PAGES[b.page]; if(pg) book.style.setProperty("--sheet", pg);
+  const inside = el("section","inside"); const rings = el("div","rings"); for(let i = 0; i < 4; i++) rings.append(el("i")); inside.append(rings);
+  const sheet = el("div","sheet" + (pg ? " custom" : "")); const tag = el("span","pagetag"); sheet.append(tag); inside.append(sheet);
+  const cv = el("div","cover p-" + b.pattern); cv.setAttribute("role","button"); cv.tabIndex = 0;
+  cv.append(el("div","spine"), el("div","band"), el("div","label", b.title || "Meu binder"));
+  (b.stickers || []).forEach(st => cv.append(stickerNode(st)));
+  cv.append(el("div","hint","toque para abrir"));
+  book.append(inside, cv); box.append(book);
+  const pager = el("nav","pager"); const prev = el("button","btn small","‹ Voltar"), lab = el("b"), next = el("button","btn small","Virar ›");
+  pager.append(prev, lab, next); pager.hidden = true; box.append(pager);
+  let page = 0;
+  const maxSlot = list.reduce((m,p) => Math.max(m, p.slot ?? 0), -1), pages = Math.max(1, Math.ceil((maxSlot + 1) / PER));
+  const bySlot = new Map(list.map(p => [p.slot, p]));
+  const draw = () => {
+    sheet.querySelectorAll(".pocket").forEach(n => n.remove());
+    for(let i = 0; i < PER; i++){
+      const slot = page*PER + i, p = bySlot.get(slot);
+      const d = el("button","pocket"); d.type = "button";
+      if(p){
+        d.append(pcEl(p));
+        if(p.protect === "top") d.classList.add("top-l"); if(p.protect === "double") d.classList.add("dbl-l"); if(p.protect === "deco") d.classList.add("deco-l");
+        d.append(el("span","num", slot + 1), el("span","tag", p.name || p.member || p.code));
+        if(p.status === "Para troca") d.append(el("span","flag troca","troca"));
+        if(p.status === "Para venda") d.append(el("span","flag venda","venda"));
+        d.onclick = () => openRO(p);
+      } else { d.classList.add("empty"); d.disabled = true; d.append(el("span","num", slot + 1)); }
+      sheet.insertBefore(d, tag);
+    }
+    tag.textContent = "pág. " + (page + 1); lab.textContent = (page + 1) + " de " + pages;
+    prev.disabled = page === 0; next.disabled = page >= pages - 1;
+  };
+  prev.onclick = () => { page--; draw(); }; next.onclick = () => { page++; draw(); };
+  const open = () => { book.classList.add("open"); pager.hidden = false; };
+  cv.onclick = open; cv.onkeydown = e => { if(e.key === "Enter" || e.key === " "){ e.preventDefault(); open(); } };
+  draw(); window.scrollTo({top:0});
+}
+function openRO(p){
+  const box = $("roImg"); box.textContent = ""; box.className = "big" + (p.protect === "deco" ? " deco-l" : ""); box.append(pcEl(p));
+  $("roName").textContent = p.name || p.member || "Photocard";
+  const prot = {none:"Sem proteção", sleeve:"Sleeve", double:"Double sleeve", top:"Toploader", deco:"Toploader decorado"}[p.protect || "sleeve"];
+  const rows = [["Membro",p.member],["Grupo",p.group],["De onde é",p.source],["Tipo",p.kind],["Situação",p.status],
+    ["Procuro",p.status === "Para troca" ? p.want : ""],["Preço",p.status === "Para venda" && p.price != null ? money(p.price) : ""],["Proteção",prot]];
+  const dl = $("roList"); dl.textContent = "";
+  rows.filter(r => r[1]).forEach(([k,val]) => dl.append(el("dt", null, k), el("dd", null, val)));
+  $("roDlg").showModal();
+}
+$("roClose").onclick = () => $("roDlg").close();
+
+/* ---------- cor livre ---------- */
+function hslToHex(h, s, l){
+  s /= 100; l /= 100; const k = n => (n + h/30) % 12, a = s * Math.min(l, 1 - l);
+  const f = n => l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
+  return "#" + [f(0), f(8), f(4)].map(x => Math.round(x*255).toString(16).padStart(2,"0")).join("").toUpperCase();
+}
+function hexToHsl(hex){
+  const m = /^#?([0-9a-f]{6})$/i.exec(hex || ""); if(!m) return {h:145, s:90, l:59};
+  const n = parseInt(m[1], 16), r = (n>>16 & 255)/255, g = (n>>8 & 255)/255, b = (n & 255)/255;
+  const mx = Math.max(r,g,b), mn = Math.min(r,g,b), l = (mx+mn)/2; let h = 0, s = 0;
+  if(mx !== mn){ const d = mx - mn; s = l > .5 ? d/(2-mx-mn) : d/(mx+mn);
+    h = mx === r ? (g-b)/d + (g < b ? 6 : 0) : mx === g ? (b-r)/d + 2 : (r-g)/d + 4; h *= 60; }
+  return {h: Math.round(h), s: Math.round(s*100), l: Math.round(l*100)};
+}
+function lum(hex){ const n = parseInt(hex.slice(1), 16); const c = [n>>16 & 255, n>>8 & 255, n & 255].map(v => { v /= 255; return v <= .03928 ? v/12.92 : Math.pow((v+.055)/1.055, 2.4); }); return .2126*c[0] + .7152*c[1] + .0722*c[2]; }
+function customPalette(hex){
+  const {h, s, l} = hexToHsl(hex), S = Math.max(s, 8), H = (sat, li) => hslToHex(h, Math.min(100, sat), li);
+  const onNeon = lum(hex) > .38 ? H(S*.6, 12) : "#FFFFFF";
+  const darkNeon = hslToHex(h, S, Math.max(l, 58)), onDark = lum(darkNeon) > .38 ? H(S*.6, 12) : "#FFFFFF";
+  return {
+    L:{desk:H(S*.55,94),dot:H(S*.45,86),line:H(S*.45,82),mint:H(S*.7,90),neon:hex,"neon-ink":H(S*.75,30),pocket:H(S*.6,97),"on-neon":onNeon,"neon-sh":hslToHex(h,S,Math.max(10,l-14)),ink:H(S*.35,17),muted:H(S*.18,42),page:H(S*.6,99)},
+    D:{desk:H(S*.45,8),dot:H(S*.4,14),line:H(S*.4,24),mint:H(S*.42,19),neon:darkNeon,"neon-ink":H(S*.9,75),pocket:H(S*.4,16),"on-neon":onDark,"neon-sh":hslToHex(h,S,Math.max(10,Math.max(l,58)-18)),ink:H(S*.5,93),muted:H(S*.2,68),page:H(S*.42,12)}
+  };
+}
+let cp = {h:145, s:90, l:58}, cpBefore = null;
+function drawWheel(){
+  const c = $("cpWheel"), x = c.getContext("2d"), W = c.width, R = W/2, img = x.createImageData(W, W);
+  for(let yy = 0; yy < W; yy++) for(let xx = 0; xx < W; xx++){
+    const dx = xx - R, dy = yy - R, d = Math.sqrt(dx*dx + dy*dy), i = (yy*W + xx)*4;
+    if(d > R){ img.data[i+3] = 0; continue; }
+    const hue = (Math.atan2(dy, dx) * 180/Math.PI + 360) % 360, sat = d/R;
+    const hex = hslToHex(hue, sat*100, 100 - sat*50), n = parseInt(hex.slice(1), 16);
+    img.data[i] = n>>16 & 255; img.data[i+1] = n>>8 & 255; img.data[i+2] = n & 255; img.data[i+3] = 255;
+  }
+  x.putImageData(img, 0, 0);
+}
+let wheelDrawn = false;
+function cpUpdate(live){
+  const hex = hslToHex(cp.h, cp.s, cp.l), wrap = $("cpWrap"), R = 120, a = cp.h * Math.PI/180, r = cp.s/100 * R;
+  const dot = $("cpDot"); dot.style.left = (R + Math.cos(a)*r) + "px"; dot.style.top = (R + Math.sin(a)*r) + "px"; dot.style.background = hslToHex(cp.h, cp.s, 100 - cp.s/2);
+  $("cpPrev").style.background = hex; $("cpHex").textContent = hex;
+  $("cpLight").style.background = "linear-gradient(90deg," + hslToHex(cp.h, cp.s, 22) + "," + hslToHex(cp.h, cp.s, 50) + "," + hslToHex(cp.h, cp.s, 78) + ")";
+  if(live) applyAccent("custom", hex);
+}
+function openPicker(){
+  if(!wheelDrawn){ drawWheel(); wheelDrawn = true; }
+  cpBefore = { accent: profile.accent || "verde", color: profile.accentColor };
+  cp = hexToHsl(profile.accent === "custom" ? profile.accentColor : (ACCENTS[profile.accent] || ACCENTS.verde).sw);
+  cp.l = Math.min(78, Math.max(22, cp.l)); $("cpLight").value = cp.l;
+  $("cpDlg").showModal(); cpUpdate(true);
+}
+(() => {
+  const w = $("cpWrap");
+  const pick = e => { const r = w.getBoundingClientRect(), dx = e.clientX - r.left - 120, dy = e.clientY - r.top - 120;
+    cp.h = Math.round((Math.atan2(dy, dx) * 180/Math.PI + 360) % 360); cp.s = Math.round(Math.min(1, Math.hypot(dx, dy)/120) * 100); cpUpdate(true); };
+  w.onpointerdown = e => { w.setPointerCapture(e.pointerId); pick(e); w.onpointermove = pick; };
+  w.onpointerup = w.onpointercancel = () => { w.onpointermove = null; };
+})();
+$("cpLight").oninput = e => { cp.l = Number(e.target.value); cpUpdate(true); };
+$("cpCancel").onclick = () => { $("cpDlg").close(); if(cpBefore) applyAccent(cpBefore.accent, cpBefore.color); };
+$("cpDlg").addEventListener("cancel", () => { if(cpBefore) applyAccent(cpBefore.accent, cpBefore.color); });
+$("cpOk").onclick = () => { const hex = hslToHex(cp.h, cp.s, cp.l); profile.accent = "custom"; profile.accentColor = hex; cpBefore = null; applyAccent("custom", hex); saveProfile(); $("cpDlg").close(); renderAccents(); toast("Cor aplicada!"); };
+
+try{ applyAccent(localStorage.getItem("mdb-accent") || "verde", localStorage.getItem("mdb-accent-color")); }catch(e){}
+
+/* ---------- notificações ---------- */
+let followers = [];
+function renderBell(){
+  const seen = profile.notifSeen || 0, n = followers.filter(f => (f.at || 0) > seen).length, dot = $("bellDot");
+  dot.hidden = n === 0; dot.textContent = n > 9 ? "9+" : String(n);
+  $("bellBtn").setAttribute("aria-label", n ? "Notificações, " + n + " novas" : "Notificações");
+}
+$("bellBtn").onclick = async () => {
+  const box = $("notifList"); box.textContent = ""; box.append(el("p","note","Carregando…"));
+  const seen = profile.notifSeen || 0;
+  $("notifDlg").showModal();
+  profile.notifSeen = Date.now(); saveProfile(); renderBell();
+  const list = followers.slice().sort((a,b) => (b.at || 0) - (a.at || 0)).slice(0, 60);
+  const profs = await Promise.all(list.map(f => FB.getProfile(f.from).catch(() => null)));
+  box.textContent = "";
+  if(!list.length){ box.append(el("div","empty")); box.lastChild.innerHTML = '<div class="em">' + BELL_ART + '</div>'; box.lastChild.append(el("b", null, "Nada por aqui ainda"), document.createTextNode("Quando alguém seguir você, aparece aqui.")); return; }
+  list.forEach((f, i) => {
+    const pr = profs[i] || {}, name = pr.username ? "@" + pr.username : "Alguém";
+    const it = el("div", "nitem" + ((f.at || 0) > seen ? " new" : ""));
+    const av = el("button","av"); av.type = "button"; paintAvatar(av, pr); av.setAttribute("aria-label", "Ver perfil de " + name);
+    const open = () => { $("notifDlg").close(); openUser(f.from); };
+    av.onclick = open;
+    const tx = el("div","tx"); const b = el("b", null, name); b.onclick = open;
+    tx.append(b, document.createTextNode(" começou a seguir você"), el("span", null, ago(f.at || Date.now())));
+    it.append(av, tx);
+    if(!followingSet.has(f.from) && pr.username){
+      const fb = el("button","btn small primary","Seguir de volta"); fb.type = "button";
+      fb.onclick = async () => { if(!profile.username){ toast("Escolha seu @ na aba Eu antes de seguir pessoas."); return; }
+        fb.disabled = true; try{ await FB.follow(uid, f.from); fb.textContent = "Seguindo ✓"; fb.className = "btn small following"; }catch(e){ fb.disabled = false; toast("Não deu para seguir agora."); } };
+      it.append(fb);
+    }
+    box.append(it);
+  });
+};
+$("notifClose").onclick = () => $("notifDlg").close();
+
+/* ---------- login ---------- */
+let signUpMode = false;
+const AUTH_ERR = {
+  "auth/invalid-email":"Esse e-mail não parece certo.", "auth/missing-password":"Digite a senha.",
+  "auth/invalid-credential":"E-mail ou senha incorretos.", "auth/wrong-password":"E-mail ou senha incorretos.",
+  "auth/user-not-found":"Não existe conta com esse e-mail.", "auth/email-already-in-use":"Já existe uma conta com esse e-mail. Tente entrar.",
+  "auth/weak-password":"A senha precisa ter pelo menos 6 caracteres.", "auth/too-many-requests":"Muitas tentativas. Espere um pouquinho e tente de novo.",
+  "auth/network-request-failed":"Sem internet. Confira a conexão.", "auth/operation-not-allowed":"Esse jeito de entrar ainda não foi ativado no Firebase.",
+  "auth/unauthorized-domain":"Este site ainda não foi autorizado no Firebase (Domínios autorizados).",
+  "auth/popup-closed-by-user":"A janela do Google foi fechada antes de terminar.",
+  "auth/popup-blocked":"O navegador bloqueou a janela do Google. Use e-mail e senha por enquanto."
+};
+const authMsg = e => AUTH_ERR[e && e.code] || "Algo deu errado. Tente de novo.";
+function setAuthTab(up){
+  signUpMode = up;
+  $("tabIn").setAttribute("aria-selected", String(!up)); $("tabUp").setAttribute("aria-selected", String(up));
+  $("pass2Box").hidden = !up; $("forgotBtn").hidden = up;
+  $("authSubmit").textContent = up ? "Criar minha conta" : "Entrar";
+  $("aPass").autocomplete = up ? "new-password" : "current-password";
+  $("authErr").textContent = ""; $("authOk").hidden = true;
+}
+$("tabIn").onclick = () => setAuthTab(false);
+$("tabUp").onclick = () => setAuthTab(true);
+$("authForm").onsubmit = async e => {
+  e.preventDefault();
+  const email = $("aEmail").value.trim(), pass = $("aPass").value;
+  $("authErr").textContent = ""; $("authOk").hidden = true;
+  if(signUpMode && pass !== $("aPass2").value){ $("authErr").textContent = "As senhas não são iguais."; return; }
+  $("authSubmit").disabled = true;
+  try{ signUpMode ? await FB.signUp(email, pass) : await FB.signIn(email, pass); }
+  catch(err){ $("authErr").textContent = authMsg(err); }
+  finally{ $("authSubmit").disabled = false; }
+};
+$("forgotBtn").onclick = async () => {
+  const email = $("aEmail").value.trim(); $("authErr").textContent = ""; $("authOk").hidden = true;
+  if(!email){ $("authErr").textContent = "Digite seu e-mail primeiro."; return; }
+  try{ await FB.reset(email); $("authOk").hidden = false; $("authOk").textContent = "Enviamos um link para criar uma senha nova. Olhe também o spam."; }
+  catch(err){ $("authErr").textContent = authMsg(err); }
+};
+$("googleBtn").onclick = async () => { $("authErr").textContent = ""; try{ await FB.google(); } catch(err){ $("authErr").textContent = authMsg(err); } };
+$("logoutBtn").onclick = () => { if(confirm("Sair da sua conta?")) FB.out(); };
+
+/* ---------- início ---------- */
+FB.onUser(user => {
+  $("bootView").hidden = true;
+  unsubs.forEach(u => u()); unsubs = [];
+  uid = user ? user.uid : null;
+  pcs = []; allPcs = []; wishes = []; cover = defaultCover(); profile = defaultProfile();
+  profileLoaded = false; usageTracked = false; window.__pubOnce = false; binderDocs = []; legacyCover = null; binders = []; tourChecked = false; if(tourOn){ tourOn = false; $("tour").hidden = true; }
+  try{ curBinder = (user && localStorage.getItem("mdb-bind-" + user.uid)) || "main"; }catch(e){ curBinder = "main"; }
+  page = 0; query = ""; loaded = false; decorating = false; selected = -1;
+  $("panel").hidden = true; $("search").value = ""; $("modeNote").hidden = true;
+  if(!user){
+    $("appView").hidden = true; $("authView").hidden = false;
+    $("aPass").value = ""; $("aPass2").value = ""; setAuthTab(false);
+    return;
+  }
+  $("authView").hidden = true; $("appView").hidden = false;
+  $("meEmail").textContent = user.email || ""; auth_email = user.email || "";
+  computeBinders(); setOpen(false); renderCover(); showTab("binder");
+  unsubs.push(FB.watchCol(uid, "pcs", list => { allPcs = list; splitPcs(); loaded = true; renderAll(); }, fail));
+  let gotBinders = false, gotCover = false, migrated = false;
+  const migrateMain = () => {
+    if(migrated || !gotBinders || !gotCover || binderDocs.some(d => d.id === "main")) return;
+    migrated = true; const c = fixCover(legacyCover); delete c.id; c.order = 0;
+    FB.put(uid, "binders", "main", c).catch(() => { migrated = false; });
+  };
+  unsubs.push(FB.watchCol(uid, "binders", list => { binderDocs = list; gotBinders = true; computeBinders(); splitPcs(); renderAll(); migrateMain(); }, fail));
+  unsubs.push(FB.watchCol(uid, "wishlist", list => { wishes = list; if(tab === "wish" || tab === "me") renderAll(); }, fail));
+  postsReady = false; posts = []; followingSet = new Set(); countsAt = 0;
+  followers = []; renderBell();
+  unsubs.push(FB.watchFollowers(uid, list => { const before = followers.length; followers = list; renderBell();
+    if(before && list.length > before && !$("notifDlg").open) toast("Você tem um seguidor novo! 🔔"); }, () => {}));
+  unsubs.push(FB.watchFollowing(uid, set => { followingSet = set; if(tab === "mural") renderMural(); }, () => {}));
+  let synced = false;
+  unsubs.push(FB.watchPosts(list => { posts = list; postsReady = true; if(!synced && profileLoaded){ synced = true; syncMyPosts(); } $("muralNote").hidden = true; if(tab === "mural") renderMural(); },
+    () => { $("muralNote").hidden = false; $("muralNote").textContent = "Não deu para carregar o mural. Confira se as regras do Firebase foram atualizadas."; }));
+  unsubs.push(FB.watchDoc(uid, "cover", d => { legacyCover = d; gotCover = true; computeBinders(); renderAll(); migrateMain(); }, fail));
+  unsubs.push(FB.watchDoc(uid, "profile", d => {
+    profileLoaded = true;
+    if(d){ const keepSeen = profile.notifSeen || 0; profile = Object.assign(defaultProfile(), d); profile.notifSeen = Math.max(keepSeen, d.notifSeen || 0); applyTheme(profile.theme); applyAccent(profile.accent || "verde", profile.accentColor); }
+    else if(user.displayName && !profile.nick) profile.nick = user.displayName.split(" ")[0];
+    renderAll();
+    if(d) trackUsage();
+    renderBell();
+    if(d && d.username && !window.__pubOnce){ window.__pubOnce = true; savePublic(); }
+    if(!tourChecked){ tourChecked = true; if(!profile.tutorialDone) setTimeout(() => { if(!tourOn && !document.querySelector("dialog[open]")) startTour(); }, 700); }
+  }, fail));
+});
+</script>
+</body>
+</html>
